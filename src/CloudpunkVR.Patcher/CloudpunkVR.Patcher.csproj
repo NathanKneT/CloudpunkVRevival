@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AssemblyName>CloudpunkVR.Patcher</AssemblyName>
+    <RootNamespace>CloudpunkVR.Patcher</RootNamespace>
+  </PropertyGroup>
+  <!-- tools/build.ps1 -Dev: developer helpers, for testing. Never in a release. -->
+  <PropertyGroup Condition="'$(DevBuild)' == 'true'">
+    <DefineConstants>$(DefineConstants);DEV</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="BepInEx.Core"><HintPath>$(BepInExCore)\BepInEx.Core.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="BepInEx.Preloader.Core"><HintPath>$(BepInExCore)\BepInEx.Preloader.Core.dll</HintPath><Private>false</Private></Reference>
+  </ItemGroup>
+</Project>

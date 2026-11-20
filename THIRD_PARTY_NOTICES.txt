@@ -1,0 +1,19 @@
+Third-party components
+
+OpenVR SDK 2.15.6 (openvr_api.dll, openvr_api.cs) by Valve
+  third_party/openvr/ and src/CloudpunkVR/ThirdParty/OpenVR/
+  BSD 3-Clause, see third_party/openvr/LICENSE (LICENSE-OpenVR.txt in the release zip)
+
+BepInEx 6 (IL2CPP, bleeding edge build 793)
+  downloaded by the installer, not stored here
+  LGPL-2.1
+
+Il2CppInterop, HarmonyX
+  shipped inside BepInEx
+  LGPL-3.0 / MIT
+
+PSVR2 Toolkit by BnuuySolutions
+  not included; when it is installed in SteamVR the mod talks to it over its local protocol
+  MIT
+
+Cloudpunk is (c) ION LANDS. This mod ships none of the game's files or assets.

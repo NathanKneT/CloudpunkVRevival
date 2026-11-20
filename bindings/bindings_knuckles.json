@@ -1,0 +1,168 @@
+{
+  "action_manifest_version": 0,
+  "alias_info": {},
+  "app_key": "steam.app.746850",
+  "bindings": {
+    "/actions/main": {
+      "sources": [
+        {
+          "path": "/user/hand/left/input/thumbstick",
+          "mode": "joystick",
+          "inputs": {
+            "position": {
+              "output": "/actions/main/in/move"
+            },
+            "click": {
+              "output": "/actions/main/in/switchview"
+            }
+          }
+        },
+        {
+          "path": "/user/hand/right/input/thumbstick",
+          "mode": "joystick",
+          "inputs": {
+            "position": {
+              "output": "/actions/main/in/look"
+            },
+            "click": {
+              "output": "/actions/main/in/recenter"
+            }
+          }
+        },
+        {
+          "path": "/user/hand/right/input/a",
+          "mode": "button",
+          "inputs": {
+            "click": {
+              "output": "/actions/main/in/interact"
+            }
+          }
+        },
+        {
+          "path": "/user/hand/right/input/b",
+          "mode": "button",
+          "inputs": {
+            "click": {
+              "output": "/actions/main/in/back"
+            }
+          }
+        },
+        {
+          "path": "/user/hand/left/input/a",
+          "mode": "button",
+          "inputs": {
+            "click": {
+              "output": "/actions/main/in/freelook"
+            }
+          }
+        },
+        {
+          "path": "/user/hand/left/input/b",
+          "mode": "button",
+          "inputs": {
+            "click": {
+              "output": "/actions/main/in/inventory"
+            }
+          }
+        },
+        {
+          "path": "/user/hand/right/input/trigger",
+          "mode": "trigger",
+          "inputs": {
+            "pull": {
+              "output": "/actions/main/in/accelerate"
+            },
+            "click": {
+              "output": "/actions/main/in/clickright"
+            }
+          }
+        },
+        {
+          "path": "/user/hand/left/input/trigger",
+          "mode": "trigger",
+          "inputs": {
+            "pull": {
+              "output": "/actions/main/in/brake"
+            },
+            "click": {
+              "output": "/actions/main/in/clickleft"
+            }
+          }
+        },
+        {
+          "path": "/user/hand/left/input/grip",
+          "mode": "button",
+          "inputs": {
+            "click": {
+              "output": "/actions/main/in/strafeleft"
+            }
+          }
+        },
+        {
+          "path": "/user/hand/right/input/grip",
+          "mode": "button",
+          "inputs": {
+            "click": {
+              "output": "/actions/main/in/straferight"
+            }
+          }
+        },
+        {
+          "path": "/user/hand/right/input/trackpad",
+          "mode": "button",
+          "inputs": {
+            "click": {
+              "output": "/actions/main/in/menu"
+            }
+          }
+        },
+        {
+          "path": "/user/hand/left/input/trackpad",
+          "mode": "button",
+          "inputs": {
+            "click": {
+              "output": "/actions/main/in/map"
+            }
+          }
+        }
+      ],
+      "poses": [
+        {
+          "output": "/actions/main/in/poseleft",
+          "path": "/user/hand/left/pose/tip"
+        },
+        {
+          "output": "/actions/main/in/poseright",
+          "path": "/user/hand/right/pose/tip"
+        }
+      ],
+      "haptics": [
+        {
+          "output": "/actions/main/out/hapticleft",
+          "path": "/user/hand/left/output/haptic"
+        },
+        {
+          "output": "/actions/main/out/hapticright",
+          "path": "/user/hand/right/output/haptic"
+        }
+      ],
+      "chords": [],
+      "skeleton": [
+        {
+          "output": "/actions/main/in/skeletonleft",
+          "path": "/user/hand/left/input/skeleton/left"
+        },
+        {
+          "output": "/actions/main/in/skeletonright",
+          "path": "/user/hand/right/input/skeleton/right"
+        }
+      ]
+    }
+  },
+  "category": "steamvr_input",
+  "controller_type": "knuckles",
+  "description": "Cloudpunk VRevival default layout: the two controllers work as one gamepad, and the game's button prompts follow this controller.",
+  "name": "Cloudpunk VRevival - Valve Index",
+  "options": {},
+  "simulated_actions": []
+}

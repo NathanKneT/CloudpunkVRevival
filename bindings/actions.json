@@ -1,0 +1,285 @@
+{
+  "default_bindings": [
+    {
+      "controller_type": "playstation_vr2_sense",
+      "binding_url": "bindings_playstation_vr2_sense.json"
+    },
+    {
+      "controller_type": "knuckles",
+      "binding_url": "bindings_knuckles.json"
+    },
+    {
+      "controller_type": "oculus_touch",
+      "binding_url": "bindings_oculus_touch.json"
+    },
+    {
+      "controller_type": "pico_controller",
+      "binding_url": "bindings_pico_controller.json"
+    },
+    {
+      "controller_type": "frame_controller",
+      "binding_url": "bindings_frame_controller.json"
+    }
+  ],
+  "actions": [
+    {
+      "name": "/actions/main/in/move",
+      "type": "vector2",
+      "requirement": "suggested"
+    },
+    {
+      "name": "/actions/main/in/look",
+      "type": "vector2",
+      "requirement": "suggested"
+    },
+    {
+      "name": "/actions/main/in/interact",
+      "type": "boolean",
+      "requirement": "suggested"
+    },
+    {
+      "name": "/actions/main/in/back",
+      "type": "boolean",
+      "requirement": "suggested"
+    },
+    {
+      "name": "/actions/main/in/freelook",
+      "type": "boolean",
+      "requirement": "suggested"
+    },
+    {
+      "name": "/actions/main/in/inventory",
+      "type": "boolean",
+      "requirement": "suggested"
+    },
+    {
+      "name": "/actions/main/in/accelerate",
+      "type": "vector1",
+      "requirement": "suggested"
+    },
+    {
+      "name": "/actions/main/in/brake",
+      "type": "vector1",
+      "requirement": "suggested"
+    },
+    {
+      "name": "/actions/main/in/strafeleft",
+      "type": "boolean",
+      "requirement": "suggested"
+    },
+    {
+      "name": "/actions/main/in/straferight",
+      "type": "boolean",
+      "requirement": "suggested"
+    },
+    {
+      "name": "/actions/main/in/menu",
+      "type": "boolean",
+      "requirement": "suggested"
+    },
+    {
+      "name": "/actions/main/in/map",
+      "type": "boolean",
+      "requirement": "suggested"
+    },
+    {
+      "name": "/actions/main/in/switchview",
+      "type": "boolean",
+      "requirement": "suggested"
+    },
+    {
+      "name": "/actions/main/in/togglehud",
+      "type": "boolean",
+      "requirement": "optional"
+    },
+    {
+      "name": "/actions/main/in/recenter",
+      "type": "boolean",
+      "requirement": "suggested"
+    },
+    {
+      "name": "/actions/main/in/clickleft",
+      "type": "boolean",
+      "requirement": "suggested"
+    },
+    {
+      "name": "/actions/main/in/clickright",
+      "type": "boolean",
+      "requirement": "suggested"
+    },
+    {
+      "name": "/actions/main/in/poseleft",
+      "type": "pose",
+      "requirement": "suggested"
+    },
+    {
+      "name": "/actions/main/in/poseright",
+      "type": "pose",
+      "requirement": "suggested"
+    },
+    {
+      "name": "/actions/main/in/skeletonleft",
+      "type": "skeleton",
+      "skeleton": "/skeleton/hand/left"
+    },
+    {
+      "name": "/actions/main/in/skeletonright",
+      "type": "skeleton",
+      "skeleton": "/skeleton/hand/right"
+    },
+    {
+      "name": "/actions/main/in/thumbleft",
+      "type": "boolean",
+      "requirement": "optional"
+    },
+    {
+      "name": "/actions/main/in/thumbright",
+      "type": "boolean",
+      "requirement": "optional"
+    },
+    {
+      "name": "/actions/main/in/indexleft",
+      "type": "boolean",
+      "requirement": "optional"
+    },
+    {
+      "name": "/actions/main/in/indexright",
+      "type": "boolean",
+      "requirement": "optional"
+    },
+    {
+      "name": "/actions/main/in/middleleft",
+      "type": "boolean",
+      "requirement": "optional"
+    },
+    {
+      "name": "/actions/main/in/middleright",
+      "type": "boolean",
+      "requirement": "optional"
+    },
+    {
+      "name": "/actions/main/in/squeezeleft",
+      "type": "vector1",
+      "requirement": "optional"
+    },
+    {
+      "name": "/actions/main/in/squeezeright",
+      "type": "vector1",
+      "requirement": "optional"
+    },
+    {
+      "name": "/actions/main/in/indexnearleft",
+      "type": "vector1",
+      "requirement": "optional"
+    },
+    {
+      "name": "/actions/main/in/indexnearright",
+      "type": "vector1",
+      "requirement": "optional"
+    },
+    {
+      "name": "/actions/main/in/middlenearleft",
+      "type": "vector1",
+      "requirement": "optional"
+    },
+    {
+      "name": "/actions/main/in/middlenearright",
+      "type": "vector1",
+      "requirement": "optional"
+    },
+    {
+      "name": "/actions/main/out/hapticleft",
+      "type": "vibration"
+    },
+    {
+      "name": "/actions/main/out/hapticright",
+      "type": "vibration"
+    }
+  ],
+  "action_sets": [
+    {
+      "name": "/actions/main",
+      "usage": "single"
+    }
+  ],
+  "localization": [
+    {
+      "language_tag": "en_US",
+      "/actions/main": "Cloudpunk",
+      "/actions/main/in/move": "Walk / steer",
+      "/actions/main/in/look": "Turn (on foot) / climb and dive (HOVA)",
+      "/actions/main/in/interact": "Interact / confirm",
+      "/actions/main/in/back": "Back / cancel",
+      "/actions/main/in/freelook": "Square: free camera (menus)",
+      "/actions/main/in/inventory": "Inventory",
+      "/actions/main/in/accelerate": "Accelerate (HOVA)",
+      "/actions/main/in/brake": "Brake and reverse (HOVA), sneak (on foot)",
+      "/actions/main/in/strafeleft": "Strafe left (HOVA)",
+      "/actions/main/in/straferight": "Strafe right (HOVA)",
+      "/actions/main/in/menu": "Pause menu",
+      "/actions/main/in/map": "Map",
+      "/actions/main/in/switchview": "Cockpit or outside view",
+      "/actions/main/in/togglehud": "Show or hide the HUD",
+      "/actions/main/in/recenter": "Recenter view",
+      "/actions/main/in/clickleft": "Menu pointer click (left hand)",
+      "/actions/main/in/clickright": "Menu pointer click (right hand)",
+      "/actions/main/in/poseleft": "Left hand pointer",
+      "/actions/main/in/poseright": "Right hand pointer",
+      "/actions/main/out/hapticleft": "Left vibration",
+      "/actions/main/out/hapticright": "Right vibration",
+      "/actions/main/in/skeletonleft": "Left hand (fingers)",
+      "/actions/main/in/skeletonright": "Right hand (fingers)",
+      "/actions/main/in/thumbleft": "Left thumb on a button",
+      "/actions/main/in/thumbright": "Right thumb on a button",
+      "/actions/main/in/indexleft": "Left index on its trigger",
+      "/actions/main/in/indexright": "Right index on its trigger",
+      "/actions/main/in/middleleft": "Left middle finger on the grip",
+      "/actions/main/in/middleright": "Right middle finger on the grip",
+      "/actions/main/in/squeezeleft": "Left grip squeeze (fingers)",
+      "/actions/main/in/squeezeright": "Right grip squeeze (fingers)",
+      "/actions/main/in/indexnearleft": "Left index near its trigger",
+      "/actions/main/in/indexnearright": "Right index near its trigger",
+      "/actions/main/in/middlenearleft": "Left middle finger near the grip",
+      "/actions/main/in/middlenearright": "Right middle finger near the grip"
+    },
+    {
+      "language_tag": "fr_FR",
+      "/actions/main": "Cloudpunk",
+      "/actions/main/in/move": "Marcher / diriger",
+      "/actions/main/in/look": "Tourner (à pied) / monter et descendre (HOVA)",
+      "/actions/main/in/interact": "Interagir / valider",
+      "/actions/main/in/back": "Retour / annuler",
+      "/actions/main/in/freelook": "Carré : caméra libre (menus)",
+      "/actions/main/in/inventory": "Inventaire",
+      "/actions/main/in/accelerate": "Accélérer (HOVA)",
+      "/actions/main/in/brake": "Freiner et reculer (HOVA), discrétion (à pied)",
+      "/actions/main/in/strafeleft": "Glisser à gauche (HOVA)",
+      "/actions/main/in/straferight": "Glisser à droite (HOVA)",
+      "/actions/main/in/menu": "Menu pause",
+      "/actions/main/in/map": "Carte",
+      "/actions/main/in/switchview": "Vue cockpit ou extérieure",
+      "/actions/main/in/togglehud": "Afficher ou masquer l'interface",
+      "/actions/main/in/recenter": "Recentrer la vue",
+      "/actions/main/in/clickleft": "Clic du pointeur (main gauche)",
+      "/actions/main/in/clickright": "Clic du pointeur (main droite)",
+      "/actions/main/in/poseleft": "Pointeur main gauche",
+      "/actions/main/in/poseright": "Pointeur main droite",
+      "/actions/main/out/hapticleft": "Vibration gauche",
+      "/actions/main/out/hapticright": "Vibration droite",
+      "/actions/main/in/skeletonleft": "Main gauche (doigts)",
+      "/actions/main/in/skeletonright": "Main droite (doigts)",
+      "/actions/main/in/thumbleft": "Pouce gauche sur un bouton",
+      "/actions/main/in/thumbright": "Pouce droit sur un bouton",
+      "/actions/main/in/indexleft": "Index gauche sur sa gâchette",
+      "/actions/main/in/indexright": "Index droit sur sa gâchette",
+      "/actions/main/in/middleleft": "Majeur gauche sur le grip",
+      "/actions/main/in/middleright": "Majeur droit sur le grip",
+      "/actions/main/in/squeezeleft": "Grip gauche serré (doigts)",
+      "/actions/main/in/squeezeright": "Grip droit serré (doigts)",
+      "/actions/main/in/indexnearleft": "Index gauche près de sa gâchette",
+      "/actions/main/in/indexnearright": "Index droit près de sa gâchette",
+      "/actions/main/in/middlenearleft": "Majeur gauche près du grip",
+      "/actions/main/in/middlenearright": "Majeur droit près du grip"
+    }
+  ]
+}

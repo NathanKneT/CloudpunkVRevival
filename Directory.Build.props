@@ -1,0 +1,28 @@
+<Project>
+  <PropertyGroup>
+    <!-- Cloudpunk install folder. Override with: dotnet build -p:CloudpunkDir="D:\Games\Cloudpunk" -->
+    <CloudpunkDir Condition="'$(CloudpunkDir)' == ''">C:\Program Files (x86)\Steam\steamapps\common\Cloudpunk</CloudpunkDir>
+    <BepInExCore>$(CloudpunkDir)\BepInEx\core</BepInExCore>
+    <Interop>$(CloudpunkDir)\BepInEx\interop</Interop>
+    <TargetFramework>net6.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>disable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <Version>0.3.0</Version>
+    <Authors>NathanKneT</Authors>
+    <Copyright>Copyright (c) 2026 NathanKneT</Copyright>
+    <Deterministic>true</Deterministic>
+    <DebugType>embedded</DebugType>
+    <!-- Keeps local folder names and git details out of the DLLs. -->
+    <PathMap>$(MSBuildThisFileDirectory)=/</PathMap>
+    <EnableSourceLink>false</EnableSourceLink>
+    <EnableSourceControlManagerQueries>false</EnableSourceControlManagerQueries>
+  </PropertyGroup>
+  <!-- AI disclosure in the assembly metadata, as Thunderstore asks. -->
+  <ItemGroup>
+    <AssemblyMetadata Include="AI_Assisted_Creation" Value="This assembly was created with the assistance of generative AI (code, tests and documentation), directed, reviewed and tested in game by the maintainer." />
+    <AssemblyMetadata Include="AI_Model_Vendor" Value="Anthropic" />
+  </ItemGroup>
+</Project>
