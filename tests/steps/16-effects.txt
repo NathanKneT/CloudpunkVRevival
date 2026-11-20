@@ -1,0 +1,17 @@
+# ScreenEffects: the game's drink effect at Full, then Reduced, in the headset view.
+waitlog Scenes: Main 120
+wait 12
+cmd title
+wait 6
+cmd continue
+wait 40
+cmd effects full
+cmd drink
+wait 6
+capture 16-drink-full
+mirror 16-drink-full
+cmd effects reduced
+wait 2
+capture 16-drink-reduced
+mirror 16-drink-reduced
+cmd status

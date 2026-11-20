@@ -1,0 +1,62 @@
+# Menus brought in front of the eyes and enlarged (title, options, pause); an option row changed with the stick
+# (+1 then -1, so the player's setting ends unchanged); then, on foot, the game's image effects switched off one at
+# a time, to compare the two eyes on distant parts of the view.
+waitlog Scenes: Main 120
+wait 12
+cmd title
+wait 6
+cmd focus
+capture 19-title-focus
+cmd xref OptionsButton Update
+cmd uipoint 110 117 click
+wait 3
+cmd focus
+capture 19-options-focus
+mirror 19-options-focus
+cmd vrstick 0.9 0 0 0 0.3
+wait 1
+cmd vrstick -0.9 0 0 0 0.3
+wait 1
+cmd press Action2 0.2
+wait 3
+cmd continue
+waitlog Cockpit view on 220
+wait 3
+cmd park
+wait 2
+cmd press Action1 0.2
+wait 3
+cmd press Action1 0.2
+wait 3
+cmd press Action1 0.2
+wait 12
+cmd status
+cmd fx list
+capture 19-fx-base
+cmd fx skybox off
+wait 2
+capture 19-fx-noskybox
+cmd fx skybox on
+cmd fx extrapost off
+wait 2
+capture 19-fx-noextrapost
+cmd fx extrapost on
+cmd fx bloom off
+wait 2
+capture 19-fx-nobloom
+cmd fx bloom on
+cmd fx volumetric off
+wait 2
+capture 19-fx-novolumetric
+cmd fx volumetric on
+cmd rain off
+wait 2
+capture 19-fx-norain
+cmd rain world
+wait 1
+capture 19-fx-base2
+cmd vrpress menu
+wait 3
+cmd focus
+capture 19-pause-focus
+cmd status

@@ -1,0 +1,58 @@
+# Laser path on the main menu, cockpit with retries, view toggle, vignette, snap turn on foot.
+waitlog Scenes: Main 120
+wait 12
+cmd title
+wait 6
+cmd uipoint 120 150
+wait 1
+cmd uipoint 110 118 click
+wait 4
+capture 07-options
+mirror 07-options
+cmd uisnap options
+cmd status
+cmd press Action2 0.15
+wait 3
+cmd status
+cmd continue
+wait 40
+cmd status
+capture 07-cockpit
+mirror 07-cockpit
+cmd cams
+cmd vignette 4
+wait 1
+capture 07-vignette
+mirror 07-vignette
+wait 4
+cmd vrpress switchview
+wait 4
+cmd status
+capture 07-chase
+cmd vrpress switchview
+wait 4
+cmd status
+cmd vrstick 0 0 0 0.8 1.5
+wait 2
+capture 07-climb
+cmd cams
+cmd press Action1 0.15
+wait 3
+cmd press Action1 0.15
+wait 3
+cmd press Action1 0.15
+wait 3
+cmd press Action1 0.15
+wait 10
+cmd status
+capture 07-onfoot
+cmd cams
+cmd vrstick 0 0 1 0 0.3
+wait 2
+capture 07-onfoot-snap
+cmd cams
+cmd vrstick 0 0.9 0 0 2
+wait 3
+capture 07-onfoot-walk
+cmd cams
+cmd status

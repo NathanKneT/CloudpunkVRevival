@@ -3,3 +3,8 @@ obj/
 artifacts/
 *.user
 .vs/
+
+# test runs
+.backups/
+tests/captures/
+tests/logs/

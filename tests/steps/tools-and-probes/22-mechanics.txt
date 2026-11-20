@@ -1,0 +1,31 @@
+# Probe, not a pass/fail test: the game's input bindings, which special mechanics exist where the save loads
+# (title, cockpit, on foot), the camera filters and post effects the scenes use, and the pause menu in front.
+waitlog Scenes: Main 120
+wait 12
+cmd actions
+cmd probe
+cmd title
+wait 6
+cmd continue
+waitlog Cockpit view on 220
+wait 3
+cmd probe
+cmd fx list
+capture 22-cockpit
+cmd park
+wait 2
+cmd press Action1 0.2
+wait 3
+cmd press Action1 0.2
+wait 3
+cmd press Action1 0.2
+wait 12
+cmd status
+cmd probe
+capture 22-onfoot
+mirror 22-onfoot
+cmd vrpress menu
+wait 3
+cmd focus
+capture 22-pause
+cmd status

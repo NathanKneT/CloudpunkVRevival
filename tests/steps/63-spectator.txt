@@ -1,0 +1,217 @@
+# The spectator view (F8, dev command `spectator`): instead of Unity's shaky mirror of the left eye, the game's window
+# shows that eye's finished image cropped, smoothed and level, for recording. The headset's own image doesn't change
+# (the `capture` steps look the same with the view on and off).
+# The null headset never moves, so `spectator shake 2` adds a hand-held head shake on top of its tracking.
+# A: at rest, raw mirror then the view. B: the cost, view off and on, twice. C: the shake at rest, raw mirror vs the
+# view, a 6 s trace, then a pixel check on a patch of dashboard (head still, then shaking about the eye: "head
+# shaking" should stay within half a pixel of "head still"). D: turning in place (no throttle, a crash would shake the
+# cockpit), then both hands on the wheel. E: the coffee held up, Camus. F: the formats and a too-wide fov. G: off and
+# on like the key. H: the pause menu. I: a district passage. J: on foot. K: back in the HOVA. L: off.
+#
+# Check: the waitlogs at the end fail the run if a trace wasn't at least 3x steadier than the head, leaned or showed an
+# edge ("spectator check: steadier, level, no edge"), or if a black period was missed ("black with the headset for").
+# The "perf spectator-off" / "perf spectator-on" lines give the cost.
+waitlog Scenes: Main 120
+wait 12
+cmd title
+wait 6
+cmd continue
+waitlog Cockpit view on 220
+waitlog the seat taken 30
+wait 2
+cmd menu close
+cmd status
+cmd spectator
+# A: the cockpit at rest, the raw mirror then the view (16:9, 75 degrees across, 8 below the gaze).
+mirror 63-rest-raw
+capture 63-rest-hmd
+cmd spectator on
+waitlog Spectator view on: 10
+wait 1
+mirror 63-rest-view
+capture 63-rest-hmd-on
+cmd spectator probe
+cmd spectator
+# B: what it costs, at rest in the cockpit.
+cmd spectator off
+wait 1
+cmd perf measure spectator-off 8
+wait 9
+cmd spectator on
+wait 1
+cmd perf measure spectator-on 8
+wait 9
+cmd spectator off
+wait 1
+cmd perf measure spectator-off-again 8
+wait 9
+cmd spectator on
+wait 1
+cmd perf measure spectator-on-again 8
+wait 9
+# C: a shaky head at rest.
+cmd spectator shake 2
+cmd spectator off
+wait 1.5
+mirror 63-shake-raw-1
+wait 0.15
+mirror 63-shake-raw-2
+wait 0.15
+mirror 63-shake-raw-3
+wait 0.15
+mirror 63-shake-raw-4
+capture 63-shake-hmd
+cmd spectator on
+wait 1.5
+cmd spectator trace 6
+mirror 63-shake-view-1
+wait 0.15
+mirror 63-shake-view-2
+wait 0.15
+mirror 63-shake-view-3
+wait 0.15
+mirror 63-shake-view-4
+capture 63-shake-hmd-on
+wait 6
+cmd spectator shake off
+wait 2
+cmd spectator hold on
+wait 0.5
+cmd spectator pixels 30 360 64
+wait 3
+cmd spectator shake 1 eye
+wait 1
+cmd spectator pixels 30 360 64
+wait 3
+cmd spectator hold off
+cmd spectator shake 2
+wait 1
+# D: turning in place both ways, then both hands on the wheel.
+cmd spectator trace 12
+cmd stick 1 0 0 0 2.5
+wait 1.5
+mirror 63-bank-a
+wait 1
+cmd stick -1 0 0 0 2.5
+wait 1.5
+mirror 63-bank-b
+wait 1
+cmd wheel grab both
+wait 0.5
+cmd wheel turn 45
+wait 1
+mirror 63-wheel-a
+capture 63-wheel-hmd
+cmd wheel turn -90
+wait 1
+mirror 63-wheel-b
+wait 3
+cmd wheel release
+cmd spectator
+# E: the coffee held up, Camus looked up at (the view follows the head), then straight ahead again.
+cmd coffee grab
+wait 1.2
+cmd coffee hold
+wait 1.5
+mirror 63-coffee
+cmd coffee sip 1
+wait 2
+cmd coffee drop
+wait 2.2
+cmd headlook -25 30
+wait 1.5
+cmd charm swing 40
+wait 0.5
+mirror 63-camus
+capture 63-camus-hmd
+cmd headlook
+wait 1.5
+# F: the formats and a field of view wider than the eye.
+cmd spectator format turned
+wait 1
+mirror 63-turned
+cmd spectator
+cmd spectator format portrait
+wait 1
+mirror 63-portrait
+cmd spectator format landscape
+cmd spectator fov 110
+wait 1
+cmd spectator
+mirror 63-fov-max
+cmd spectator fov 75
+# G: off and on as the key does it.
+cmd spectator key
+wait 1
+mirror 63-key-off
+cmd spectator key
+waitlog read again from the settings file 5
+wait 1
+mirror 63-key-on
+# H: the pause menu.
+cmd vrpress menu
+wait 2
+mirror 63-menu
+capture 63-menu-hmd
+cmd menu close
+wait 2
+# I: a district passage: the picture goes black with the headset, then back in the cockpit.
+cmd press RightTrigger 10
+cmd stick 0.35 0 0 0 10
+wait 11
+cmd lift
+cmd lift enter
+mirror 63-passage-1
+wait 1
+mirror 63-passage-2
+wait 1
+capture 63-passage-hmd
+waitlog Transition over after .*\(district passage 1\) 60
+wait 3
+mirror 63-passage-after
+cmd spectator
+# J: on foot (getting out is black too), traced with the shake.
+cmd park
+wait 2
+cmd menu close
+cmd press Action1 0.2
+wait 3
+cmd press Action1 0.2
+wait 3
+cmd press Action1 0.2
+wait 3
+waitlog View: Cockpit -> OnFoot 10
+wait 6
+cmd spectator trace 5
+mirror 63-onfoot
+wait 0.15
+mirror 63-onfoot-2
+capture 63-onfoot-hmd
+wait 6
+cmd spectator
+# K: back in the HOVA.
+cmd board
+wait 2
+cmd press Action1 0.2
+waitlog Boarding: 20
+wait 3
+mirror 63-boarded
+cmd spectator
+# L: off, the raw mirror back.
+cmd spectator shake off
+cmd spectator off
+wait 1
+mirror 63-off
+cmd status
+# The checks.
+waitlog Spectator view on: the left eye's finished image 5
+waitlog the eye's copy read back: .*\(a picture, 5
+waitlog spectator pixels \(head still\) over 5
+waitlog spectator pixels \(head shaking\) over 5
+waitlog perf spectator-on-again: 5
+waitlog steadiness over 6\.[0-9] s: .*spectator check: steadier, level, no edge 5
+waitlog steadiness over 12\.[0-9] s: .*spectator check: steadier, level, no edge 5
+waitlog steadiness over 5\.[0-9] s: .*spectator check: steadier, level, no edge 5
+waitlog more than the eye's image holds 5
+waitlog black with the headset for .*a passage, a load or getting in or out 5
+waitlog Spectator view off \(developer command\) 5

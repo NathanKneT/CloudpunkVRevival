@@ -1,0 +1,126 @@
+# The flat game's free camera for filming (Film/FreeCam). Run flat:
+#   tools\test\Run-VRTest.ps1 -Steps tests\steps\59-freecam.txt -NoHeadset
+# First the game's occlusion culling (GDOC) before and after `freecam on`: 59-behind looks away from the game's view,
+# at what GDOC hid, and it must all be drawn now. Then a 4-keyframe path is built from the game's camera, saved,
+# cleared and loaded back, and played as takes at 60 fps fixed steps:
+#   takes 1 and 2: the same 10 s path twice, visibility probe on: same poses bit for bit, same renderers drawn (no
+#     popping). The probe lines also count blinks: expect 0, or read the names (a sign blinking by itself is fine).
+#   takes 3 and 4: the control, the game's occlusion culling kept. Info only.
+#   take 5: following the HOVA (or Rania) with no keyframes while the game drives it for 6 s.
+#   take 6: two keyframes around the followed HOVA. take 7: the first path at half speed.
+# Then slow motion with the pause menu open as the camera goes off: once the menu closes, time is back to x1.
+# The harness puts your own shots back after the run and moves the take folders to tests\captures\takes-<time>.
+#
+# Check: "read back identical"; "freecam take check: take 2 = take 1 frame for frame"; "freecam probe check: take 2
+# drew the same still renderers as take 1"; take 5's follow line says it moved while the camera stayed near; "world at
+# x0.5" for take 7; the last `freecam check` shows time x1, capture rate 0, game keys, Cinemachine and GDOC on.
+# Captures: 59-game-before (HUD), 59-freecam-on (no HUD, no prompts, same view), 59-take1-mid and 59-take2-mid (alike
+# up to traffic and rain), 59-game-after (HUD back). In the takes folders, frames 00150, 00300 and 00450 of take 1
+# and take 2 have the buildings on the same pixels.
+waitlog Scenes: Main 120
+wait 10
+cmd title
+wait 5
+cmd continue
+wait 30
+cmd status
+mirror 59-game-before
+cmd freecam gdoc
+cmd freecam on
+waitlog freecam: on, the game's camera 20
+cmd freecam controls game
+cmd freecam info
+wait 2
+cmd freecam gdoc
+mirror 59-freecam-on
+cmd freecam nudge 0 0 0 180
+wait 2
+mirror 59-behind
+cmd freecam nudge 0 0 0 180
+
+# the path: up and back from the game's view, round to the right closing in, then a rise looking up
+cmd freecam clear
+cmd freecam nudge 0 4 -8 0 -8
+cmd freecam key
+cmd freecam nudge 10 2 6 -30 0
+cmd freecam key
+cmd freecam nudge 8 -1 10 -45 0 -15
+cmd freecam key
+cmd freecam nudge -2 5 4 -30 20 10
+cmd freecam key
+cmd freecam save test59
+waitlog freecam: path saved to .*test59\.json.* read back identical 10
+cmd freecam clear
+cmd freecam load test59
+waitlog freecam: path test59 loaded from .*4 keyframe\(s\) in the city 10
+
+# takes 1 and 2: identical frames, nothing popping
+cmd freecam probe on
+cmd freecam frames at 2.5 5 7.5
+cmd freecam play 10
+waitlog freecam take 1: 10
+wait 4
+mirror 59-take1-mid
+waitlog freecam take 1 done 90
+waitlog freecam take 1 poses 10
+cmd freecam play
+waitlog freecam take 2: 10
+wait 4
+mirror 59-take2-mid
+waitlog freecam take 2 done 90
+waitlog freecam take check: take 2 = take 1 frame for frame 10
+waitlog freecam probe check: take 2 drew the same still renderers as take 1 10
+
+# takes 3 and 4, the control: the game's occlusion culling kept
+cmd freecam frames off
+cmd freecam occlusion on
+cmd freecam play
+waitlog freecam take 3 done 90
+cmd freecam play
+waitlog freecam take 4 done 90
+wait 2
+cmd freecam occlusion off
+cmd freecam probe off
+
+# take 5: following, no keyframes, the game drives
+cmd freecam clear
+cmd freecam follow on
+waitlog freecam: following 10
+cmd freecam play 6
+waitlog freecam take 5: 10
+cmd press RightTrigger 6
+cmd stick 0 1 0 0 6
+waitlog freecam take 5 done 40
+waitlog freecam take 5 follow: .* moved 10
+
+# take 6: keyframes around the followed HOVA
+cmd freecam nudge 3 1 -2 20 0
+cmd freecam key
+cmd freecam nudge -6 0 0 -40 0
+cmd freecam key
+cmd freecam play 5
+waitlog freecam take 6: 10
+cmd press RightTrigger 5
+waitlog freecam take 6 done: .*around 40
+
+# take 7: the first path in slow motion
+cmd freecam follow off
+cmd freecam load test59
+cmd freecam slow 0.5
+cmd freecam play
+waitlog freecam take 7 done: .*world at x0\.5 60
+cmd freecam info
+
+# off in slow motion with the pause menu open: time comes back once it closes
+cmd press Options 0.2
+wait 3
+cmd menu
+cmd freecam off
+waitlog freecam: off \(developer command\); the game's camera back: Cinemachine on 10
+cmd menu close
+wait 3
+cmd freecam check
+waitlog freecam: check: off; time x1, physics step [0-9.]+ s, capture rate 0, .*game keys on, .*Cinemachine on, GDOC on 10
+wait 2
+cmd status
+mirror 59-game-after

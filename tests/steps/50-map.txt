@@ -1,0 +1,46 @@
+# The map and the pause menu from one-frame presses, the way SteamVR sends a long press (map) and a short press
+# (menu) of Options on PS VR2 Sense. In the cockpit, then on foot.
+#
+# Check: `vrpress map` opens the full map (`status:` map=True), Circle closes it (map=False), and `vrpress menu`
+# opens the pause menu ("menu: the game's menu is open."). The second `vrpress map` is only logged, to see whether
+# the game's own map button closes it. The null headset has no controllers, so no "Bindings (" line here.
+waitlog Scenes: Main 120
+wait 12
+cmd title
+wait 6
+cmd continue
+waitlog Cockpit view on 220
+wait 4
+cmd vrpress map
+wait 3
+cmd status
+capture 50-map-cockpit
+cmd vrpress map
+wait 3
+cmd status
+cmd press Action2 0.2
+wait 2
+cmd status
+cmd vrpress menu
+wait 2
+cmd menu
+capture 50-pause-cockpit
+cmd menu close
+wait 2
+cmd status
+cmd park
+wait 2
+cmd press Action1 0.2
+wait 3
+cmd press Action1 0.2
+wait 3
+cmd press Action1 0.2
+wait 12
+cmd status
+cmd vrpress map
+wait 3
+cmd status
+capture 50-map-onfoot
+cmd press Action2 0.2
+wait 2
+cmd status

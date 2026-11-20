@@ -1,0 +1,62 @@
+# Title, main menu, cockpit (interior camera fix), inventory, map, then on foot.
+waitlog Scenes: Main 120
+wait 12
+capture 06-title
+cmd title
+wait 6
+capture 06-menu
+mirror 06-menu
+cmd status
+cmd continue
+wait 30
+cmd status
+capture 06-flight-a
+mirror 06-flight-a
+cmd cams
+cmd press Action1 0.15
+wait 3
+cmd press Action1 0.15
+wait 3
+cmd press Action1 0.15
+wait 3
+cmd press Action1 0.15
+wait 3
+cmd status
+capture 06-cockpit
+mirror 06-cockpit
+cmd cams
+cmd press Action4 0.15
+wait 3
+capture 06-inventory
+mirror 06-inventory
+cmd status
+cmd press Action2 0.15
+wait 2
+cmd press Share 0.15
+wait 3
+capture 06-map
+cmd status
+cmd press Action2 0.15
+wait 2
+cmd press Options 0.15
+wait 3
+cmd status
+cmd press Options 0.15
+wait 2
+cmd status
+cmd park
+wait 2
+cmd press Action1 0.2
+wait 15
+cmd status
+capture 06-onfoot-a
+mirror 06-onfoot-a
+cmd cams
+cmd stick 0 0.8 0 0 2
+wait 3
+capture 06-onfoot-walk
+cmd stick 0 0 0.9 0 0.2
+wait 2
+capture 06-onfoot-turn
+cmd status
+cmd cams

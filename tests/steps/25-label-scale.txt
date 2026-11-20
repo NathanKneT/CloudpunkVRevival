@@ -1,0 +1,15 @@
+# The stereo test label (larger, on a dark band, above the gaze) and the automatic render scale staying at 1.0
+# while the graphics card has room.
+waitlog Scenes: Main 120
+wait 12
+cmd title
+wait 6
+cmd stereotest on
+wait 3
+capture 25-stereotest-label
+mirror 25-stereotest-label
+wait 14
+capture 25-stereotest-step2
+cmd stereotest off
+wait 35
+cmd status

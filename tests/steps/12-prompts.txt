@@ -1,0 +1,27 @@
+# Button prompts follow the controller: PlayStation icons from the game's own atlas, Xbox for comparison.
+waitlog Scenes: Main 120
+wait 12
+cmd prompts playstation
+cmd title
+wait 6
+cmd continue
+wait 35
+cmd status
+capture 12-cockpit-ps
+mirror 12-cockpit-ps
+cmd uisnap hud-ps
+cmd press Options 0.2
+wait 3
+cmd uipoint 110 118 click
+wait 3
+cmd uisnap options-ps
+cmd prompts xbox
+wait 1
+cmd uisnap options-xbox
+cmd prompts playstation
+wait 1
+cmd press Action2 0.2
+wait 2
+cmd press Options 0.2
+wait 2
+cmd status

@@ -1,0 +1,28 @@
+# Laser path: hover selects like the gamepad, trigger confirms through the game's confirm button.
+waitlog Scenes: Main 120
+wait 12
+cmd title
+wait 6
+cmd uipoint 120 150
+wait 1
+cmd uisnap hover
+capture 09-menu-hover
+cmd uipoint 110 118 click
+wait 4
+capture 09-options
+mirror 09-options
+cmd uisnap options
+cmd status
+cmd press Action2 0.2
+wait 3
+cmd status
+cmd continue
+wait 35
+cmd press Options 0.2
+wait 3
+capture 09-pause
+cmd uisnap pause
+cmd status
+cmd press Options 0.2
+wait 2
+cmd status

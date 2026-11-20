@@ -1,0 +1,103 @@
+# The wheel's power steering (WheelLock), measured, no controllers needed (dev commands `wheel physics|rate|sweep|lock`
+# and `vrsettings set wheel`). Start with the HOVA at rest in the cockpit. Sweeps are numbered ("wheel sweep #N") so
+# each waitlog waits for its own. Sweep angles are the wheel's; it goes back to where it started after each.
+#  1. `wheel physics`: what the game steers with, and where the HOVA starts to turn (6 deg of wheel at any speed with
+#     lock 35); every "wheel:" line says "turns from 6.0 deg".
+#  2. Both hands sweep the wheel to 5, 10, 15, 20 and 30 deg, 3 s each. At rest the law is linear: 5 deg about
+#     1 deg/s, 10 about 34, 15 about 78, then the game's cap.
+#  3. The presets through the VREVIVAL menu's own apply and save: 50, 65, 25, then 35 again (sweeps #2 to #5). At 65,
+#     10 deg hardly turns the HOVA; at 25, 30 deg is past the stop.
+#  4. `wheel sweep compare`: a longer lock never turns faster for the same wheel.
+#  5. Square with both hands on the wheel changes nothing: no "VRevival menu" line, `wheel lock` still says 35.
+#  6. At speed: wheel at its stop, full throttle, the HOVA spirals out instead of flying straight. Sweep #6 holds 35,
+#     30 and 25 deg and checks the offset against the HOVA's physics.
+#  7. A capture at the 35 deg stop, both hands on the rim.
+#  8. The free wheel follows the stick with the same gearing, and grabbing it then doesn't make it jump.
+#
+# Check: each "wheel sweep #N over" ends "check: steer ok rate ok" (#6 also "fast ok"); the compare line says
+# "check: follow ok". No warning naming the wheel: "STEER FAILED", "WHEEL FAILED", "RATE FAILED", "FOLLOW FAILED",
+# "FAST FAILED", "NOT SAVED", "NOT IN THE FILE", "cut short". A "FAST FAILED" right after a coffee "collision" line
+# just means the HOVA hit something and slowed down.
+waitlog Scenes: Main 120
+wait 12
+cmd title
+wait 6
+cmd continue
+waitlog Cockpit view on 220
+wait 4
+cmd wheel lock
+cmd vrsettings set wheel 35
+cmd wheel physics
+cmd wheel rate
+wait 2
+cmd wheel grab both
+wait 1
+cmd wheel
+cmd wheel sweep 5 10 15 20 30
+waitlog wheel sweep #1 over 40
+wait 2
+cmd vrsettings set wheel 50
+wait 1
+cmd wheel lock
+cmd wheel sweep 5 10 15 20 30
+waitlog wheel sweep #2 over 40
+wait 2
+cmd vrsettings set wheel 65
+wait 1
+cmd wheel sweep 5 10 15 20 30
+waitlog wheel sweep #3 over 40
+wait 2
+cmd vrsettings set wheel 25
+wait 1
+cmd wheel sweep 5 10 15 20 30
+waitlog wheel sweep #4 over 40
+wait 2
+cmd vrsettings set wheel 35
+wait 1
+cmd wheel sweep 5 10 15 20 30
+waitlog wheel sweep #5 over 40
+cmd wheel sweep compare
+cmd wheel release
+wait 1.5
+cmd wheel grab both
+wait 1
+cmd vrpress freelook
+wait 1
+cmd wheel lock
+cmd wheel release
+wait 1.5
+cmd wheel grab both
+wait 1
+cmd wheel turn 35
+wait 1
+cmd wheel
+cmd press RightTrigger 10
+wait 4
+cmd wheel physics
+cmd wheel sweep 35 30 25 hold 1.5 fast
+waitlog wheel sweep #6 over 20
+cmd wheel physics
+cmd press LeftTrigger 3
+wait 4
+cmd wheel turn 40
+wait 1.5
+cmd wheel
+capture 61-wheel-stop-35
+mirror 61-wheel-stop-35
+cmd wheel release
+wait 1.5
+cmd wheel stop
+wait 1
+cmd vrstick 0.6 0 0 0 6
+wait 2.5
+cmd wheel
+cmd wheel grab both
+wait 0.5
+cmd wheel
+wait 2
+cmd wheel release
+wait 1.5
+cmd wheel stop
+wait 1
+cmd wheel
+cmd status

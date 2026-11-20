@@ -1,0 +1,87 @@
+# Filming tool, not a pass/fail test: district trips to scout shots, flat. `goto <scene> [exit]` borrows one of the
+# game's passages, points it at that scene for one trip and runs the game's own PlayerCar.EnterLift on it; `spots`
+# writes the district's parking volumes, passages, exits, spawn points, sectors, artist cameras and traffic lanes to
+# CloudpunkVR-shots\spots-<scene>.json, which the harness copies to tests\captures\spots-<time>\.
+# Needs a save that starts flying in Clearwater (Level0_Right): bring your own save (a folder of .sav files) with
+# -SaveFixture <folder>.
+#   tools\test\Run-VRTest.ps1 -Steps tests\steps\tools-and-probes\69-district-goto.txt -NoHeadset -SaveFixture <folder>
+# Four trips, each a different case: Level4 (a passage pointed there, no exit asked), Level2_Midtown (the game's own
+# trip), Level3 99 (an exit Level3 doesn't have, so it arrives at one it has), Level0_Middle 11 (pointed there, exit
+# 11). Then `park` by index and by name, and two refusals that move nothing. Districts the save hasn't reached yet may
+# start story lines or calls.
+# The harness writes CloudpunkVR.bench, so the mod blocks every Steam achievement for the run; the run stops at the
+# first step unless all three hooks are on.
+#
+# Check: "goto: arrived in <scene>" per trip, no "goto FAILED", no "goto: stopped"; a "spots:" line and a file in each
+# of the five districts (cameras with a sane fov and a "key" each, lane points about 10 m apart). "achievement ...
+# blocked (bench)" lines are fine, but both `unitylog` steps must count 0 "UnlockAchievement:" lines (the game's own
+# unlock never ran), and the last `bench` line lists what was blocked.
+# Mirror captures: 69-<scene>.png a few seconds after each arrival, the HOVA out of the exit in the new district.
+waitlog Bench run .*: achievements blocked, 3 of 3 hooks on 10
+waitlog Scenes: Main 120
+wait 10
+cmd title
+wait 5
+cmd continue
+waitlog Scenes: Level 150
+wait 25
+cmd status
+unitylog UnlockAchievement:
+cmd goto list
+cmd spots
+waitlog spots: Level\S*[ :].* -> .*spots-Level\S*\.json 15
+mirror 69-start
+cmd goto Level4
+waitlog goto: passage '[^']*' .*pointed at Level4 exit 'goto-any' for this trip 10
+waitlog goto: arrived in Level4 150
+waitlog goto: arriving at exit '\d+' of Level4 .*under the passage's id 'goto-any' 5
+waitlog goto: 'goto-any' out of the game's exit list; the borrowed passage went with 5
+wait 4
+mirror 69-Level4
+cmd status
+cmd goto list
+cmd spots
+waitlog spots: Level4[ :].* -> .*spots-Level4\.json 15
+cmd goto Level2_Midtown
+waitlog goto: passage '.*' already leads to Level2_Midtown exit 10
+waitlog goto: arrived in Level2_Midtown 150
+waitlog goto: exit '\d+' found in Level2_Midtown 5
+wait 4
+mirror 69-Level2_Midtown
+cmd goto list
+cmd spots
+waitlog spots: Level2_Midtown[ :].* -> .*spots-Level2_Midtown\.json 15
+cmd goto Level3 99
+waitlog goto: passage '[^']*' .*pointed at Level3 exit '99' for this trip 10
+waitlog goto: arrived in Level3 150
+waitlog goto: no exit '99' in Level3 .*arriving at '\d+' instead, entered in the game's exit list under the passage's id '99' 5
+waitlog goto: '99' out of the game's exit list 5
+wait 4
+mirror 69-Level3
+cmd goto list
+cmd spots
+waitlog spots: Level3[ :].* -> .*spots-Level3\.json 15
+cmd goto Level0_Middle 11
+waitlog goto: passage '[^']*' .*pointed at Level0_Middle exit '11' for this trip 10
+waitlog goto: arrived in Level0_Middle 150
+waitlog goto: exit '11' found in Level0_Middle 5
+waitlog goto: the borrowed passage went with Level3 5
+wait 4
+mirror 69-Level0_Middle
+cmd goto list
+cmd spots
+waitlog spots: Level0_Middle[ :].* -> .*spots-Level0_Middle\.json 15
+cmd park 0
+waitlog park: (car moved to #0 |#0 '.*' is switched off) 10
+wait 2
+cmd park Park Volume
+waitlog park: car moved to #\d+ '.*' at .*volumes match 'Park Volume' 10
+wait 2
+cmd goto Apartment
+waitlog goto: no passage comes out in Apartment 10
+cmd goto Level0_Middle
+waitlog goto: already in Level0_Middle 10
+cmd status
+cmd bench
+waitlog bench: achievement guard on 10
+unitylog UnlockAchievement:

@@ -1,0 +1,58 @@
+# Hands open at rest, fingers following what a PS VR2 Sense senses (demo skeleton, no controllers): open, index on
+# its trigger, middle finger on the grip (ring and pinky follow), and fully closed. From the side, then from the back
+# and holding a controller.
+#
+# Check: "hands readout" logs what each finger gets and the curl drawn; across a pose change it logs
+# "fingers settled in N ms".
+waitlog Scenes: Main 120
+wait 12
+cmd title
+wait 6
+cmd continue
+waitlog Cockpit view on 220
+wait 3
+cmd hands demo open 2
+wait 1
+cmd hands readout
+mirror 51-open-side
+capture 51-open-stereo
+cmd hands demo open 0
+wait 1
+mirror 51-open-back
+cmd hands demo i 2
+wait 1
+cmd hands readout
+mirror 51-index-side
+cmd hands demo i 2 1
+wait 1
+cmd hands readout
+mirror 51-index-pulled-side
+cmd hands demo m 2
+wait 1
+cmd hands readout
+mirror 51-middle-side
+cmd hands demo tim 2 1 1
+wait 1
+cmd hands readout
+mirror 51-closed-side
+capture 51-closed-stereo
+cmd hands demo tim 3 1 1
+wait 1
+mirror 51-closed-hold
+cmd hands demo open 3
+wait 1
+mirror 51-open-hold
+cmd hands readout 2
+cmd hands demo tim 2 1 1
+wait 3
+cmd hands readout 2
+cmd hands demo open 2
+wait 3
+cmd hands demo 0.1 0
+wait 1
+mirror 51-curl-open-back
+cmd hands demo 0.9 0
+wait 1
+mirror 51-curl-closed-back
+cmd hands off
+cmd status

@@ -1,0 +1,55 @@
+# The comfort vignette in flight. `vignette trace` logs every quarter second the turn rate, climb, speed and
+# acceleration, what each asks for, the target, the intensity, its peak and its largest step in a frame.
+# In the cockpit: a climb from rest, full throttle into a wide left turn, then that gentle turn at cruising speed
+# (nothing expected: the game's own pull of a turn at speed doesn't count), a hard turn each way (a smooth rise over a
+# few tenths of a second, a slow fade), a climb and a sink while turning gently (nothing expected), then a hard brake.
+# The last capture forces the vignette to show the ring.
+# Where your save parks the HOVA matters: hitting something early on skews the trace.
+waitlog Scenes: Main 120
+wait 12
+cmd title
+wait 6
+cmd continue
+waitlog Cockpit view on 220
+waitlog the seat taken 30
+wait 2
+cmd vignette info
+cmd vignette trace 70
+capture 43-rest
+cmd stick 0 0 0 1 3
+wait 3.5
+cmd press RightTrigger 31
+cmd stick -0.35 0 0 0 12
+wait 4
+capture 43-wide-turn-accelerating
+wait 6
+capture 43-wide-turn-cruising
+wait 2
+cmd stick 1 0 0 0 4
+wait 2.5
+capture 43-hard-right
+wait 1.5
+cmd stick -0.35 0 0 0 3
+wait 3
+cmd stick -1 0 0 0 4
+wait 2.5
+capture 43-hard-left
+wait 1.5
+cmd stick -0.35 0 0 1 4
+wait 3
+capture 43-climb
+wait 1
+cmd stick -0.35 0 0 -1 4
+wait 3
+capture 43-sink
+wait 1.5
+cmd press LeftTrigger 2
+wait 0.8
+capture 43-hard-stop
+wait 5
+cmd vignette info
+cmd vignette 3
+wait 1.5
+capture 43-forced
+wait 3
+cmd status

@@ -1,0 +1,132 @@
+# The wheel in Rania's hands, no controllers needed (dev command `wheel`).
+# Both hands grab the rim and turn it to the right stop, then the left one (WheelLock set to 35 first, your cfg may
+# hold another), then let go so it springs back. Then one tracking fault at a time on one hand: a jump, a freeze, a
+# drift, a slip 20 cm off the rim, then 50 cm away (it lets go). Then the hub (holds but doesn't steer until the hand
+# moves out), reaching for the lever with the wheel held, one hand turning past the stop and back (wheel at -25,
+# steers left like a real one), a grab while the stick steers, a recenter and a menu while holding.
+# The steering itself is measured in 61-wheel-lock.
+#
+# Check: every `cmd wheel` line ends with "check: sides ok steer ok wheel ok" (a failure is also a warning).
+# The "Wheel:" lines log the measured wheel and each grab, trust change and slip.
+waitlog Scenes: Main 120
+wait 12
+cmd title
+wait 6
+cmd continue
+waitlog Cockpit view on 220
+wait 4
+cmd wheel lock 35
+cmd wheel
+capture 36-wheel-rest
+cmd wheel grab both
+wait 1
+cmd wheel
+capture 36-wheel-grab
+mirror 36-wheel-grab
+cmd wheel turn 45
+wait 2
+cmd wheel
+capture 36-wheel-right
+cmd wheel turn -90
+wait 2
+cmd wheel
+capture 36-wheel-left-stop
+cmd wheel release
+wait 1.5
+cmd wheel
+capture 36-wheel-sprung-back
+cmd wheel grab both
+wait 1
+cmd wheel jump left
+wait 1
+cmd wheel
+cmd wheel freeze left
+wait 1
+cmd wheel turn -30
+wait 1.5
+cmd wheel
+capture 36-wheel-frozen-left
+cmd wheel thaw
+wait 1
+cmd wheel
+cmd wheel drift left
+wait 2
+cmd wheel
+cmd wheel thaw
+wait 2
+cmd wheel
+cmd wheel slip right
+wait 1.5
+cmd wheel
+cmd wheel turn 40
+wait 1.5
+cmd wheel
+capture 36-wheel-slipped-right
+cmd wheel release left
+wait 1
+cmd wheel turn 10
+wait 1.5
+cmd wheel
+cmd wheel away right
+wait 1.5
+cmd wheel
+cmd wheel release
+wait 1.5
+cmd wheel
+cmd wheel grab right hub
+wait 1
+cmd wheel
+capture 36-wheel-hub
+cmd wheel thaw right
+wait 1
+cmd wheel
+cmd wheel turn 30
+wait 1.5
+cmd wheel
+cmd wheel reach right
+wait 1.5
+cmd wheel
+cmd lever
+capture 36-wheel-reached-lever
+cmd wheel release right
+wait 1.5
+cmd wheel stop
+wait 1
+cmd wheel
+cmd wheel grab left
+wait 1
+cmd wheel turn 90
+wait 2
+cmd wheel
+cmd wheel turn 30
+wait 1.5
+cmd wheel
+capture 36-wheel-one-hand
+cmd wheel release
+wait 1.5
+cmd vrstick 0.6 0 0 0 4
+wait 1
+cmd wheel
+cmd wheel grab both
+wait 1
+cmd wheel
+wait 3
+cmd wheel
+cmd wheel turn 20
+wait 1
+cmd recenter
+wait 1
+cmd wheel
+capture 36-wheel-after-recenter
+cmd vrpress menu
+wait 2
+cmd wheel
+cmd vrpress menu
+wait 2
+cmd wheel
+cmd wheel stop
+wait 3
+cmd wheel
+capture 36-wheel-straight-after-turns
+wait 1
+cmd status

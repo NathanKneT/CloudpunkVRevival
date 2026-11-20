@@ -1,0 +1,78 @@
+# District passages in the cockpit, through the game's own mechanism (its Lift class), twice: the HOVA is put inside
+# the nearest passage's trigger, so the game runs Lift.OnTriggerEnter, PlayerCar.EnterLift, the load and the exit as
+# in flight. That move is a teleport itself, so one blink just before each passage is expected.
+# Before that, fast flight in a wide turn at full throttle must not blink.
+#
+# Check: the "Transition" lines give each passage's timeline; the waits at the end fail the run if a blink showed in
+# the fast flight or during and after a passage.
+# Captures: one a second through each passage, black from the first one after `lift enter` with the passage card
+# after half a second, then the cockpit with nothing moving.
+waitlog Scenes: Main 120
+wait 12
+cmd title
+wait 6
+cmd continue
+waitlog Cockpit view on 220
+wait 6
+cmd status
+cmd cutcheck
+cmd press RightTrigger 10
+cmd stick 0.35 0 0 0 10
+wait 11
+cmd cutcheck
+cmd lift
+capture 40-before
+cmd lift enter
+capture 40-a01
+cmd cutcheck
+capture 40-a02
+wait 1
+capture 40-a03
+wait 1
+capture 40-a04
+wait 1
+capture 40-a05
+wait 1
+capture 40-a06
+wait 1
+capture 40-a07
+wait 1
+capture 40-a08
+waitlog Transition over after .*\(district passage 1\) 60
+capture 40-a-after
+wait 3
+capture 40-a-settled
+cmd cutcheck
+cmd status
+cmd cams
+cmd lift
+cmd lift enter
+capture 40-b01
+cmd cutcheck
+capture 40-b02
+wait 1
+capture 40-b03
+wait 1
+capture 40-b04
+wait 1
+capture 40-b05
+wait 1
+capture 40-b06
+wait 1
+capture 40-b07
+wait 1
+capture 40-b08
+waitlog Transition over after .*\(district passage 2\) 60
+capture 40-b-after
+wait 3
+capture 40-b-settled
+cmd cutcheck
+cmd status
+cmd cams
+# check 2 is the fast flight, 4 and 6 run from just after each `lift enter` to 3 s after the fade-in
+waitlog cut check 2: none 10
+waitlog cut check 4: none 10
+waitlog cut check 6: none 10
+# the passage card showed during a passage and was gone before the picture came back
+waitlog Transition .*: card shown 10
+waitlog Transition .*: card hidden 10

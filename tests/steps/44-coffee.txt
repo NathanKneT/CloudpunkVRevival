@@ -1,0 +1,136 @@
+# Rania's night-shift coffee in the cockpit, no controllers needed (dev command `coffee`).
+# Looking down and right at the holder (`headlook`): throttle, a coast, a full-lock turn and a hard brake, then test
+# pushes of 0.15 g (sloshes) and 0.7 g (spills). Then the test hand takes the cup, holds it up, takes three sips,
+# holds it with the left hand on the wheel, pours some out, lets go away from the holder and over it, holds it
+# through a recenter (nothing spilled), and empties it. Throws are in 49-coffee-throw.
+#
+# Check: "Coffee: holder on ..." with its distances to the lever, the wheel and the shoulder (or "Coffee: no cup this
+# flight" if no spot fits). Boarding doesn't spill; only the hard brake and the 0.7 g push log "Coffee: spilled".
+# A push past 30 m/s2 logs "Coffee: the HOVA's measured push jumped to ..." and why (a collision is felt at once:
+# depending on where your save parks the HOVA, the first throttle can hit something, and that spill is real).
+# One "Coffee: sip" line per sip. Getting in, the lever, the charm and the coffee each get placed "under the black".
+waitlog Scenes: Main 120
+wait 12
+cmd title
+wait 6
+cmd continue
+waitlog Cockpit view on 220
+waitlog Coffee: (holder on|no cup) 30
+wait 2
+cmd coffee tried
+cmd coffee
+cmd wheel
+cmd charm
+cmd headlook 45 60
+wait 1.5
+capture 44-coffee-rest
+mirror 44-coffee-rest
+cmd coffee
+cmd press RightTrigger 3
+wait 0.5
+capture 44-coffee-throttle
+wait 2.8
+cmd coffee
+wait 3
+cmd coffee
+cmd press RightTrigger 4
+cmd stick 1 0 0 0 3
+wait 1
+capture 44-coffee-turn
+wait 2.2
+cmd coffee
+cmd press RightTrigger 3
+wait 3.2
+cmd coffee
+cmd press LeftTrigger 2
+wait 0.35
+capture 44-coffee-brake
+mirror 44-coffee-brake
+wait 2
+cmd coffee
+wait 2
+cmd coffee slosh 0.15 side
+wait 0.1
+capture 44-coffee-slosh
+wait 1.5
+cmd coffee
+cmd coffee slosh 0.7
+wait 0.12
+capture 44-coffee-spill
+wait 2
+cmd coffee
+cmd headlook
+wait 2
+capture 44-coffee-ahead
+mirror 44-coffee-ahead
+cmd coffee
+cmd coffee grab
+wait 1.2
+cmd coffee
+cmd coffee hold
+wait 1.5
+capture 44-coffee-held
+mirror 44-coffee-held
+cmd coffee
+cmd coffee sip 3
+wait 1.8
+capture 44-coffee-sip
+wait 6
+cmd coffee
+cmd wheel grab left
+wait 1
+cmd coffee hold
+wait 1.5
+capture 44-coffee-wheel-and-cup
+cmd wheel
+cmd coffee
+cmd wheel release left
+cmd coffee pour
+wait 1.6
+capture 44-coffee-pour
+wait 1.5
+cmd coffee
+cmd coffee release
+wait 1.5
+cmd coffee
+cmd coffee grab
+wait 1.2
+cmd coffee drop
+wait 2.2
+cmd coffee
+cmd headlook 45 60
+wait 1
+capture 44-coffee-back
+cmd headlook
+cmd coffee grab
+wait 1.2
+cmd coffee hold
+wait 1.5
+cmd coffee
+cmd recenter
+wait 1
+cmd coffee
+cmd coffee sip 4
+wait 12
+cmd coffee
+cmd coffee release
+wait 1.5
+cmd coffee stop
+cmd coffee refill
+cmd coffee at 0.12 -0.24 0.34
+wait 2
+capture 44-coffee-close
+mirror 44-coffee-close
+cmd coffee
+cmd coffee place
+wait 2
+cmd coffee
+cmd perf measure coffee 6
+wait 7
+cmd vrpress switchview
+wait 3
+cmd coffee
+cmd vrpress switchview
+wait 4
+cmd coffee
+cmd status

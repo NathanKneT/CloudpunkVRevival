@@ -1,0 +1,345 @@
+# The HOVA's mirrors (dev command `mirrors`; MirrorQuality, MirrorAngle, RearMirror).
+# The game feeds both dashboard screens from one blurry 64x32 camera on the left flank. The mod draws each screen's
+# own side (256 px across at Low, 512 at High) and adds a rear-view mirror hanging from the ceiling beside Camus.
+# `mirrors look left|right|rear|strip [close]` turns the test head to one, `mirrors snap <name>` saves the textures
+# to BepInEx\mirrors-<name>-*.png. A mirror more than 80 degrees off where the head points isn't drawn.
+# In order: every setting in turn, captures at Game, Low and High, Camus poked into the mirror, the cost at rest, what
+# occlusion culling hides, the screens' width, then flying with banks and hovering at a few cull radii.
+#
+# Check:
+#  - "draws 64x32 for both screens", then "each rear-view screen shows its own side", and after the charm is placed
+#    "Mirrors: the rear-view mirror hangs ... beside Camus on his left" with "side by side" and "the district sign
+#    shows whole above it". "Camus not placed" is a failure.
+#  - "Mirrors: the rear-view mirror looks out from N m behind the HOVA's centre" (N about 2 to 3) and "the game's
+#    occlusion culling leaves everything within 25 m drawn".
+#  - the `charm` lines after each poke: "the rear-view mirror beside him, knocked N time(s)", N going up.
+#  - "perf mirrors-*" lines: off is the floor, game the reference. "perf mirrors-low" should stay within 0.5 ms CPU of
+#    "perf mirrors-game".
+# Captures:
+#  - 48-game-*: both screens the same blurry picture. 48-low-*, 48-high-*: sharp, each screen its own side, upright.
+#  - 48-rear-*: the mirror in its dark metal frame left of Camus, the street behind mirrored, no HOVA body in the
+#    glass. Dark sky, never white or flat grey ("plain, darkened"); *-gamelook-* is the game's look, for comparison.
+#  - 48-knock-*: Camus swings into the frame and stops there, never through it.
+#  - 48-fly-rear-bank, 48-fly-low-left-bank: the horizon stays level in the glass while the HOVA banks (it tilts in
+#    the game's own, 48-fly-game-left-bank).
+#  - 48-hover-cull* and 48-gdoc-*: what culling hides behind you at each radius, and with GDOC off.
+waitlog Scenes: Main 120
+wait 12
+cmd title
+wait 6
+cmd continue
+waitlog Cockpit view on 220
+waitlog the seat taken 30
+# every setting in turn with a readout after each, so a crash names the last one ("devcmd: mirrors <setting>")
+cmd mirrors
+cmd mirrors own
+wait 3
+cmd mirrors
+cmd mirrors off
+wait 3
+cmd mirrors
+cmd mirrors low
+wait 3
+cmd mirrors
+cmd mirrors high
+wait 3
+cmd mirrors
+cmd mirrors rear on
+wait 3
+cmd mirrors
+cmd mirrors own
+wait 3
+cmd mirrors
+cmd mirrors off
+wait 3
+cmd mirrors
+cmd mirrors high
+wait 3
+cmd mirrors
+cmd mirrors grade game
+wait 3
+cmd mirrors
+cmd mirrors grade plain
+cmd mirrors low
+wait 3
+cmd mirrors
+waitlog Mirrors: Low: each rear-view screen 20
+waitlog Charm: hangs from the ceiling 20
+waitlog Mirrors: the rear-view mirror hangs 20
+wait 2
+cmd perf auto off
+cmd charm
+cmd mirrors
+capture 48-ahead
+mirror 48-ahead
+cmd mirrors game
+wait 2
+cmd mirrors look left
+wait 1
+capture 48-game-left
+mirror 48-game-left
+cmd mirrors snap game-left
+cmd mirrors look right
+wait 1
+capture 48-game-right
+mirror 48-game-right
+cmd mirrors
+cmd mirrors low
+wait 2
+cmd mirrors look left
+wait 1
+capture 48-low-left
+mirror 48-low-left
+cmd mirrors snap low-left
+cmd mirrors
+cmd mirrors look right
+wait 1
+capture 48-low-right
+mirror 48-low-right
+cmd mirrors snap low-right
+cmd mirrors look rear
+wait 1
+capture 48-rear-low
+mirror 48-rear-low
+cmd mirrors snap rear-low
+cmd mirrors
+cmd mirrors look left close
+wait 1
+capture 48-low-left-close
+mirror 48-low-left-close
+cmd mirrors look right close
+wait 1
+capture 48-low-right-close
+mirror 48-low-right-close
+cmd mirrors look rear close
+wait 1
+capture 48-rear-low-close
+mirror 48-rear-low-close
+cmd mirrors snap rear-low-close
+cmd mirrors grade game
+wait 1
+mirror 48-rear-gamelook-close
+cmd mirrors look left close
+wait 1
+mirror 48-low-left-gamelook-close
+cmd mirrors grade plain
+wait 1
+mirror 48-low-left-plain-close
+cmd mirrors
+cmd mirrors look rear
+wait 1
+cmd charm poke 1.6 mirror
+wait 0.1
+capture 48-knock-a
+mirror 48-knock-a
+wait 0.2
+capture 48-knock-b
+mirror 48-knock-b
+wait 2
+cmd charm
+cmd charm poke 1.6 mirror
+wait 2
+cmd charm
+cmd mirrors high
+wait 2
+cmd mirrors look left
+wait 1
+capture 48-high-left
+mirror 48-high-left
+cmd mirrors snap high-left
+cmd mirrors look right
+wait 1
+capture 48-high-right
+mirror 48-high-right
+cmd mirrors look rear
+wait 1
+capture 48-rear-high
+mirror 48-rear-high
+cmd mirrors snap rear-high
+cmd mirrors look left close
+wait 1
+mirror 48-high-left-close
+cmd mirrors look rear close
+wait 1
+mirror 48-rear-high-close
+cmd mirrors
+cmd mirrors off
+wait 2
+cmd mirrors look left
+wait 1
+capture 48-off-left
+cmd mirrors look rear
+wait 1
+capture 48-off-rear
+cmd mirrors look strip
+wait 1
+capture 48-strip
+mirror 48-strip
+cmd mirrors low
+cmd mirrors look off
+# cost at rest, straight ahead, 8 s each
+cmd mirrors off
+cmd mirrors rear off
+wait 3
+cmd perf measure mirrors-off 8
+wait 9
+cmd mirrors game
+wait 3
+cmd perf measure mirrors-game 8
+wait 9
+cmd mirrors
+cmd mirrors low
+wait 3
+cmd perf measure mirrors-low-screens 8
+wait 9
+cmd mirrors rear on
+wait 3
+cmd perf measure mirrors-low 8
+wait 9
+cmd mirrors
+cmd mirrors cull 0
+wait 3
+cmd perf measure mirrors-low-game-culling 8
+wait 9
+cmd mirrors
+cmd mirrors cull 200
+wait 3
+cmd perf measure mirrors-low-cull200 8
+wait 9
+cmd mirrors
+cmd mirrors cull 25
+cmd mirrors grade game
+wait 3
+cmd perf measure mirrors-low-gamelook 8
+wait 9
+cmd mirrors
+cmd mirrors grade plain
+cmd mirrors high
+wait 3
+cmd perf measure mirrors-high 8
+wait 9
+cmd mirrors
+cmd mirrors low
+cmd mirrors off
+wait 1
+cmd mirrors low
+wait 3
+cmd perf measure mirrors-low-again 8
+wait 9
+# what the main camera's occlusion culling hides from the mirrors
+cmd mirrors look rear
+cmd perf gdoc off
+wait 2
+capture 48-gdoc-off
+mirror 48-gdoc-off
+cmd mirrors snap gdoc-off
+cmd perf reset
+wait 2
+capture 48-gdoc-on
+mirror 48-gdoc-on
+cmd mirrors snap gdoc-on
+# width of the dashboard screens
+cmd mirrors look left
+cmd mirrors angle 90
+wait 1
+mirror 48-angle-90
+cmd mirrors snap angle-90
+cmd mirrors angle 40
+wait 1
+mirror 48-angle-40
+cmd mirrors snap angle-40
+cmd mirrors angle 60
+# flying: climb clear of the roofs, throttle and a turn each way on the left screen (Low vs the game's), then brake
+# to a hover and try cull 0 (the game's own), 25 (default), 80, 200 m and GDOC off, then each mirror up close
+cmd mirrors look off
+cmd vrstick 0 0 0 1 4
+wait 4.5
+cmd press RightTrigger 8
+wait 3
+cmd mirrors look left
+wait 1
+capture 48-fly-low-left
+mirror 48-fly-low-left
+cmd stick 1 0 0 0 2
+wait 1
+capture 48-fly-low-left-bank
+mirror 48-fly-low-left-bank
+cmd mirrors snap fly-low-bank
+cmd mirrors game
+cmd stick -1 0 0 0 2
+wait 1
+capture 48-fly-game-left-bank
+mirror 48-fly-game-left-bank
+cmd mirrors snap fly-game-bank
+cmd mirrors low
+cmd mirrors look rear
+wait 1
+capture 48-fly-rear
+mirror 48-fly-rear
+cmd stick 1 0 0 0 1.5
+wait 0.8
+capture 48-fly-rear-bank
+mirror 48-fly-rear-bank
+cmd mirrors snap fly-rear
+cmd press LeftTrigger 3
+wait 4
+cmd mirrors
+cmd mirrors cull 0
+wait 1
+mirror 48-hover-cull0
+cmd mirrors snap hover-cull0
+cmd mirrors look left
+wait 1
+mirror 48-hover-cull0-left
+cmd mirrors look rear
+cmd mirrors cull 25
+wait 1.5
+mirror 48-hover-cull25
+cmd mirrors snap hover-cull25
+cmd mirrors cull 80
+wait 1.5
+mirror 48-hover-cull80
+cmd mirrors snap hover-cull80
+cmd mirrors look left
+wait 1
+mirror 48-hover-cull80-left
+cmd mirrors look rear
+cmd mirrors cull 200
+wait 1.5
+mirror 48-hover-cull200
+cmd mirrors snap hover-cull200
+cmd perf gdoc off
+wait 1.5
+mirror 48-hover-cull200-gdocoff
+cmd mirrors snap hover-cull200-gdocoff
+cmd perf reset
+cmd mirrors cull 25
+wait 1
+cmd mirrors
+cmd perf measure hover-cull25 6
+wait 7
+cmd mirrors cull 0
+wait 2
+cmd perf measure hover-cull0 6
+wait 7
+cmd mirrors cull 25
+wait 1
+cmd mirrors look rear close
+wait 1
+capture 48-fly-rear-close
+mirror 48-fly-rear-close
+cmd mirrors grade game
+wait 0.5
+mirror 48-fly-rear-gamelook-close
+cmd mirrors grade plain
+cmd mirrors look left close
+wait 1
+capture 48-fly-left-close
+mirror 48-fly-left-close
+cmd mirrors look right
+wait 1.5
+capture 48-fly-low-right
+mirror 48-fly-low-right
+cmd mirrors look off
+cmd mirrors
+cmd charm

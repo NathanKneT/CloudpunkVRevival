@@ -1,0 +1,152 @@
+# Perf bench, a measurement tool rather than a pass/fail test: what each part of the image costs on the null headset.
+# SteamVR's frame counters over 8 s with one suspect switched off or lowered at a time, first in the cockpit (the
+# HOVA waits in the air, same view), then on foot. AutoRenderScale is off so the eye resolution stays put.
+# `perf reset` puts the image back after each switch, `perf reset all` the resolution settings too.
+#
+# Read: each "perf <label>:" line against the base one before it; "Image effects:" says what the game had on.
+# The `unitylog` lines count Unity's field-of-view warnings in its own log: they should only grow while
+# `perf fovwarnings on` lets them through.
+waitlog Scenes: Main 120
+wait 12
+cmd title
+wait 6
+cmd continue
+waitlog Cockpit view on 220
+wait 15
+cmd perf auto off
+cmd perf
+unitylog Cannot set field of view
+cmd perf measure cockpit-base 8
+wait 9
+unitylog Cannot set field of view
+capture 39-base
+cmd perf volumetric quarter
+wait 2
+cmd perf measure volumetric-quarter 8
+wait 9
+capture 39-volumetric-quarter
+cmd perf reset
+cmd perf volumetric off
+wait 2
+cmd perf measure volumetric-off 8
+wait 9
+cmd perf reset
+cmd perf bloom half
+wait 2
+cmd perf measure bloom-half 8
+wait 9
+capture 39-bloom-half
+mirror 39-bloom-half
+cmd perf reset
+wait 2
+mirror 39-bloom-full
+cmd perf bloom off
+wait 2
+cmd perf measure bloom-off 8
+wait 9
+cmd perf reset
+cmd perf extrapost off
+wait 2
+cmd perf measure extra-bloom-off 8
+wait 9
+cmd perf reset
+cmd perf post off
+wait 2
+cmd perf measure post-stack-off 8
+wait 9
+cmd perf reset
+cmd perf fxaa off
+wait 2
+cmd perf measure fxaa-off 8
+wait 9
+cmd perf reset
+cmd perf sky off
+wait 2
+capture 39-sky-off
+cmd perf measure sky-off 8
+wait 9
+cmd perf reset
+cmd perf gdoc off
+wait 2
+cmd perf measure gdoc-off 8
+wait 9
+cmd perf reset
+cmd perf cockpit nohdr
+wait 2
+cmd perf measure cockpit-nohdr 8
+wait 9
+cmd perf cockpit empty
+wait 2
+cmd perf measure cockpit-empty 8
+wait 9
+cmd perf reset
+cmd perf overlay off
+cmd perf ui off
+wait 2
+cmd perf measure overlay-ui-off 8
+wait 9
+cmd perf reset
+cmd perf shadows off
+wait 2
+cmd perf measure shadows-off 8
+wait 9
+cmd perf reset
+cmd perf lod 0.5
+wait 2
+cmd perf measure lod-half 8
+wait 9
+cmd perf reset
+unitylog Cannot set field of view
+cmd perf fovwarnings on
+wait 2
+cmd perf measure fov-warnings-on 8
+wait 9
+cmd perf reset
+unitylog Cannot set field of view
+# resolution changes re-create the eye images, so they get 4 s to settle
+cmd perf res 1600
+wait 4
+capture 39-res-1600
+mirror 39-res-1600
+cmd perf measure res-1600 8
+wait 9
+cmd perf scale 0.8
+wait 4
+capture 39-res-1600-scale-0.8
+mirror 39-res-1600-scale-0.8
+cmd perf measure res-1600-scale-0.8 8
+wait 9
+cmd perf reset all
+cmd perf auto off
+wait 4
+capture 39-back-to-full
+mirror 39-back-to-full
+cmd perf measure cockpit-base-again 8
+wait 9
+# on foot
+cmd park
+wait 2
+cmd press Action1 0.2
+wait 3
+cmd press Action1 0.2
+wait 3
+cmd press Action1 0.2
+wait 15
+cmd status
+cmd perf measure onfoot-base 8
+wait 9
+cmd rain off
+wait 2
+cmd perf measure onfoot-rain-off 8
+wait 9
+cmd rain world
+cmd traffic 0.5
+wait 20
+cmd perf measure onfoot-traffic-half 8
+wait 9
+cmd traffic 1
+cmd perf reset all
+cmd perf
+cmd status
+unitylog Cannot set field of view
+unitylog RenderViewportScale is not supported

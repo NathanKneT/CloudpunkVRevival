@@ -1,0 +1,78 @@
+# What makes the title's lights differ between the eyes, with real headset eyes on the null one: `fx eyes fake 8 63 4`
+# turns each eye's frustum 8 deg outward, puts the eyes 63 mm apart and lets both reach 4 deg more down than up
+# (made-up values). Then the title is captured with one thing switched at a time, all with the fake eyes on.
+#
+# Captures (SteamVR headset window: left eye on the left 1000 px, right eye on the right; with fake eyes the eyes'
+# pictures are about 276 px apart, so find the same building in each eye before comparing):
+#  - 55-plain: no fake eyes yet. 55-base: fake eyes, everything as the mod does it (fixes on).
+#  - 55-hx-game: volumetric light recorded once for both eyes like the game does (`fx hx off`): the searchlight's beam
+#    on the left leaves its lamp in one eye (in 55-base it starts at the lamp in both).
+#  - 55-fog-game: the fog with the game's centred vectors (`fx eyes off`), the fog fix's "before".
+#  - 55-nofog: no fog at all, the reference.
+#  - one camera effect off at a time: 55-bloom-off, 55-extra-off (PostProcess), 55-volumetric-off, 55-fxaa-off,
+#    55-stack-off (PostProcessLayer), 55-culling-off (`perf gdoc off`); 55-back: all back, still fake.
+#
+# Check: "fx eyes fake: SteamVR put the eyes", "is drawn with the turned frustum" for both eyes (-31.5 and +31.5 "mm to
+# the head's right"); `eyes 2` before and with fake eyes: no renderer or light switched between the eyes; every
+# "fx cam:" line names what went off; "Stereo fixes: the volumetric light recorded for each eye on 'MenuCamera'" and
+# `fx hx` lines with left AND right pass counts growing.
+waitlog Scenes: Main 120
+wait 12
+cmd title
+wait 6
+cmd status
+cmd fx cam
+cmd fx pp
+cmd eyes 2
+capture 55-plain
+cmd fx eyes fake 8 63 4
+wait 2
+cmd fx eyes
+cmd eyes 2
+capture 55-base
+mirror 55-base
+cmd fx hx off
+wait 2
+cmd fx hx
+capture 55-hx-game
+cmd fx hx on
+wait 2
+cmd fx hx
+cmd fx eyes off
+wait 2
+cmd fx eyes dump
+capture 55-fog-game
+cmd fx eyes on
+cmd fx pp GlobalFog off
+wait 2
+capture 55-nofog
+cmd fx pp reset
+cmd fx cam AmplifyBloomEffect off
+wait 2
+capture 55-bloom-off
+cmd fx cam reset
+cmd fx cam PostProcess off
+wait 2
+capture 55-extra-off
+cmd fx cam reset
+cmd fx cam HxVolumetricCamera off
+cmd fx cam HxVolumetricImageEffect off
+wait 2
+capture 55-volumetric-off
+cmd fx cam reset
+cmd fx cam FXAA off
+wait 2
+capture 55-fxaa-off
+cmd fx cam reset
+cmd fx cam PostProcessLayer off
+wait 2
+capture 55-stack-off
+cmd fx cam reset
+cmd perf gdoc off
+wait 3
+capture 55-culling-off
+cmd perf reset
+wait 2
+capture 55-back
+cmd fx eyes fake off
+cmd fx cam

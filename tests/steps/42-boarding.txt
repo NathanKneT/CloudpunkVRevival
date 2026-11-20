@@ -1,0 +1,118 @@
+# Getting back into the HOVA, timed, both ways the game does it. First the cockpit HUD: no radar disc on the
+# windscreen (CockpitRadar off) and no minimap piece.
+# A, the slow way: the flight ends in the outside view, so the game shows it again on getting in and the mod switches
+# to the cockpit while black. Park, get out, walk back (dev command `board` puts Rania a metre from the hull), get in.
+# B, the direct way: out from the cockpit, which the game remembers, so getting in goes straight to the cockpit and
+# the jump into the seat stays black until the view holds still.
+# `menu close` shuts a pause menu opened by a stray press, which would eat every Cross.
+#
+# Check: "Boarding: the headset was black for X s getting into the HOVA through the outside view; cockpit view on at
+# +Y s" for A, "... straight into the cockpit view" for B. The cut checks fail the run on a blink while getting in
+# through the outside view or after either fade-in.
+# Captures: one every half second while getting in.
+waitlog Scenes: Main 120
+wait 12
+cmd title
+wait 6
+cmd continue
+waitlog Cockpit view on 220
+wait 6
+cmd menu close
+cmd status
+cmd hud
+capture 42-cockpit-hud
+mirror 42-cockpit-hud
+# A: the outside view, then out of the HOVA
+cmd vrpress switchview
+wait 4
+cmd status
+waitlog View: Cockpit -> Chase 5
+cmd park
+wait 2
+cmd menu close
+cmd status
+cmd press Action1 0.2
+wait 3
+cmd status
+cmd press Action1 0.2
+wait 3
+cmd status
+cmd press Action1 0.2
+wait 3
+cmd status
+waitlog View: Chase -> OnFoot 10
+wait 9
+cmd status
+cmd hud
+capture 42-onfoot-hud
+wait 5
+cmd board
+wait 2
+cmd status
+cmd cutcheck
+cmd press Action1 0.2
+capture 42-a-00
+cmd status
+wait 0.5
+capture 42-a-05
+wait 0.5
+capture 42-a-10
+wait 0.5
+capture 42-a-15
+wait 0.5
+capture 42-a-20
+wait 0.5
+capture 42-a-25
+wait 0.5
+capture 42-a-30
+wait 0.5
+capture 42-a-35
+wait 0.5
+capture 42-a-40
+waitlog Boarding: .*through the outside view 20
+capture 42-a-back
+wait 3
+capture 42-a-settled
+mirror 42-a-settled
+cmd cutcheck
+cmd status
+cmd hud
+# B: out again from the cockpit, back in straight into it
+wait 3
+cmd park
+wait 2
+cmd menu close
+cmd status
+cmd press Action1 0.2
+wait 3
+cmd status
+cmd press Action1 0.2
+wait 3
+cmd status
+cmd press Action1 0.2
+wait 3
+cmd status
+waitlog View: Cockpit -> OnFoot 10
+wait 9
+cmd board
+wait 2
+cmd status
+cmd press Action1 0.2
+capture 42-b-00
+wait 0.5
+capture 42-b-05
+wait 0.5
+capture 42-b-10
+waitlog Boarding: .*straight into the cockpit view 15
+# the jump into the seat lands a frame before the game says "in the HOVA", so it counts as a blink here (black anyway)
+cmd cutcheck
+capture 42-b-back
+wait 3
+capture 42-b-settled
+mirror 42-b-settled
+cmd cutcheck
+cmd status
+# A ended in the cockpit through the outside view; no blink from its Cross to 3 s after its fade-in, nor after B's
+waitlog Boarding: .*through the outside view; cockpit view on at 5
+waitlog cut check 2: none 10
+waitlog cut check 4: none 10

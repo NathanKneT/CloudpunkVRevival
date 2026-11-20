@@ -1,0 +1,27 @@
+# Probe, not a pass/fail test: what the game's look is made of (`art`), and the performance settings.
+# TrafficDensity 0.5 is set before the save loads (the car limit is read then), then the rain off and back to World.
+waitlog Scenes: Main 120
+wait 12
+cmd art
+cmd title
+wait 6
+cmd art
+cmd traffic 0.5
+cmd continue
+wait 40
+cmd traffic
+cmd art
+capture 17-rain-on
+mirror 17-rain-on
+cmd rain off
+wait 2
+capture 17-rain-off
+mirror 17-rain-off
+cmd rain world
+wait 20
+cmd traffic
+cmd vrpress menu
+wait 3
+cmd art
+capture 17-pause
+cmd status

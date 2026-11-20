@@ -1,0 +1,26 @@
+# Menu, then the existing save (Continue), with the camera driver, UI panel and overlay.
+waitlog Scenes: Main 120
+wait 12
+capture 02-menu
+cmd status
+cmd dump
+cmd xref RedAlliance.Util.MainCameraVehicleRenderer OnPostRender
+cmd xref RedAlliance.Util.InteriorCameraSetTarget OnPreRender
+cmd xref Player SwitchCamera
+cmd xref Player Update
+cmd xref Global IsInMenu
+wait 2
+cmd continue
+wait 40
+capture 02-ingame-a
+cmd status
+cmd dump
+wait 4
+cmd press DPadUp 0.15
+wait 6
+capture 02-ingame-b
+cmd status
+cmd stick 0 0 0.9 0 0.3
+wait 2
+capture 02-ingame-c
+cmd status

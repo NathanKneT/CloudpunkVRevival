@@ -1,0 +1,55 @@
+# Tour of the main views: title, menu, cockpit, outside view, vignette, pause, on foot, inventory and map.
+waitlog Scenes: Main 120
+wait 12
+capture 10-title
+cmd title
+wait 6
+cmd uipoint 110 118
+wait 1
+capture 10-menu
+mirror 10-menu
+cmd continue
+wait 40
+cmd status
+capture 10-cockpit
+mirror 10-cockpit
+cmd vrpress switchview
+wait 4
+cmd status
+capture 10-outside
+cmd vrpress switchview
+wait 4
+cmd vignette 4
+wait 1
+capture 10-vignette
+wait 3
+cmd press Options 0.2
+wait 3
+capture 10-pause
+cmd status
+cmd press Options 0.2
+wait 2
+cmd park
+wait 2
+cmd press Action1 0.2
+wait 3
+cmd press Action1 0.2
+wait 3
+cmd press Action1 0.2
+wait 12
+cmd status
+capture 10-on-foot
+mirror 10-on-foot
+cmd press Action4 0.2
+wait 3
+capture 10-inventory
+cmd status
+cmd press Action2 0.2
+wait 2
+cmd press Share 0.2
+wait 3
+capture 10-map
+cmd status
+cmd press Action2 0.2
+wait 2
+cmd status

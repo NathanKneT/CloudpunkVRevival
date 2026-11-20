@@ -1,0 +1,218 @@
+# Calls and lines in the cockpit, shown once. A call from CONTROL used to show twice: the game's own box on the
+# dashboard's left screen and the HUD's copy over the wheel, both low and hard to read.
+# `call Control <n>` makes a call through the game's own boxes: it rings, then types the lines out. Lines move on by
+# themselves after their reading time; `call next` skips one like the game's continue button. Every frame of a call is
+# watched (black frames and menus apart).
+# The calls:
+#  1. at rest in the cockpit (ringing, typing, typed, next lines, the end)
+#  2. turning in place (no throttle, so nothing gets hit and shakes the cockpit)
+#  3. ringing in late during a district passage
+#  4. HudOnWindshield off: the game's own box on the dashboard, once, no HUD copy
+#  5. the game's HUD hidden by its own toggle: same, the game's box once
+#  6. on foot: nothing changes, low in the middle of the gaze like a subtitle
+#  7. while boarding
+# All the summaries are checked together at the end, so one failure doesn't stop the calls after it.
+#
+# Check: each "call watch N: over" line ends "-> call watch ok": all lines seen, "two boxes in 0", "the wrong box in
+# 0", "a line or a call up but no box in 0", the box at 2.00 m and in the cockpit "against the cockpit at most" a few
+# mm from one frame to the next. Each `call check <label>` ends "-> call check ok" (else "FAILED:" and why), with
+# "nothing of the cockpit behind the box" on the windscreen.
+# Captures: in the cockpit, one box only (portrait, name, words) on the windscreen just above the dashboard, not over
+# the wheel or the side screens. 62-off-* and 62-hudhidden-*: only the game's own box on the dashboard. 62-onfoot: the
+# subtitle low in the middle.
+waitlog Scenes: Main 120
+wait 12
+cmd title
+wait 6
+cmd continue
+waitlog Cockpit view on 220
+waitlog Coffee: (holder on|no cup) 30
+wait 4
+cmd menu close
+cmd status
+cmd hud
+capture 62-cockpit-before
+mirror 62-cockpit-before
+# 1. at rest in the cockpit
+cmd call Control 4
+waitlog call watch 1: ringing 10
+wait 0.5
+cmd call check rest-ringing
+capture 62-ringing
+mirror 62-ringing
+waitlog call watch 1: talking 15
+wait 0.5
+capture 62-typing
+cmd call check rest-talking
+mirror 62-talking
+cmd uimap
+cmd hud
+cmd wrist
+wait 3
+capture 62-typed
+cmd call next
+waitlog call watch 1: line 2 15
+wait 0.5
+capture 62-line2
+wait 2
+cmd call next
+waitlog call watch 1: line 3 15
+cmd call next
+waitlog call watch 1: line 4 15
+wait 1
+cmd call next
+wait 0.3
+capture 62-closing
+waitlog call watch 1: (over|stopped) 30
+# 2. turning: the box stays put on the windscreen while the HOVA turns
+cmd call Control 2
+cmd stick 0.8 0 0 0 10
+waitlog call watch 2: talking 15
+wait 1
+cmd call check turn
+capture 62-turn
+mirror 62-turn
+wait 2
+cmd call next
+wait 3
+cmd call next
+wait 3
+cmd call next
+wait 3
+cmd call next
+waitlog call watch 2: (over|stopped) 40
+# 3. ringing in late in a district passage: black frames, then one box once the view is back
+cmd lift
+cmd lift enter
+wait 7
+cmd call Control 4
+waitlog Transition over after .*\(district passage 1\) 60
+waitlog call watch 3: (ringing|talking) 20
+wait 1
+cmd call check after-passage
+capture 62-passage-after
+mirror 62-passage-after
+wait 2
+cmd call next
+wait 3
+cmd call next
+wait 3
+cmd call next
+wait 3
+cmd call next
+waitlog call watch 3: (over|stopped) 60
+# 4. HudOnWindshield off: the game's own boxes on the dashboard, once, no HUD copy
+cmd call windshield off
+wait 1
+cmd call Control 2
+waitlog call watch 4: ringing 10
+wait 0.5
+cmd call check off-ringing
+capture 62-off-ringing
+mirror 62-off-ringing
+waitlog call watch 4: talking 15
+wait 1
+cmd call check off-talking
+capture 62-off-talking
+mirror 62-off-talking
+wait 2
+cmd call next
+wait 3
+cmd call next
+wait 3
+cmd call next
+wait 3
+cmd call next
+waitlog call watch 4: (over|stopped) 40
+cmd call windshield on
+wait 1
+# 5. the game's HUD hidden by its own toggle: the game's box on the dashboard, once
+cmd call hud off
+wait 1
+cmd call Control 3
+waitlog call watch 5: ringing 10
+wait 0.5
+cmd call check hudhidden-ringing
+capture 62-hudhidden-ringing
+waitlog call watch 5: talking 15
+wait 1
+cmd call check hudhidden-talking
+capture 62-hudhidden-talking
+mirror 62-hudhidden-talking
+wait 2
+cmd call next
+wait 3
+cmd call next
+wait 3
+cmd call next
+wait 3
+cmd call next
+waitlog call watch 5: (over|stopped) 40
+cmd call hud on
+wait 1
+# 6. on foot: the HUD's box low in the middle of the gaze, as before
+cmd park
+wait 2
+cmd menu close
+cmd press Action1 0.2
+wait 3
+cmd press Action1 0.2
+wait 3
+cmd press Action1 0.2
+waitlog View: Cockpit -> OnFoot 15
+wait 6
+cmd status
+cmd call Control 2
+waitlog call watch 6: talking 15
+wait 1
+cmd call check onfoot
+capture 62-onfoot
+mirror 62-onfoot
+wait 2
+cmd call next
+wait 3
+cmd call next
+wait 3
+cmd call next
+wait 3
+cmd call next
+waitlog call watch 6: (over|stopped) 40
+# 7. a call while boarding: it rings in the black of getting in, then one box on the windscreen
+cmd board
+wait 2
+cmd status
+cmd press Action1 0.2
+cmd call Control 4
+waitlog call watch 7: (ringing|talking) 25
+wait 1
+cmd status
+cmd call check after-boarding
+capture 62-boarding-after
+mirror 62-boarding-after
+wait 2
+cmd call next
+wait 3
+cmd call next
+wait 3
+cmd call next
+wait 3
+cmd call next
+waitlog call watch 7: (over|stopped) 60
+# every call and every check
+waitlog call watch 1: over .* -> call watch ok 5
+waitlog call watch 2: over .* -> call watch ok 5
+waitlog call watch 3: over .* -> call watch ok 5
+waitlog call watch 4: over .* -> call watch ok 5
+waitlog call watch 5: over .* -> call watch ok 5
+waitlog call watch 6: over .* -> call watch ok 5
+waitlog call watch 7: over .* -> call watch ok 5
+waitlog call check rest-ringing: .* -> call check ok 5
+waitlog call check rest-talking: .* -> call check ok 5
+waitlog call check turn: .* -> call check ok 5
+waitlog call check after-passage: .* -> call check ok 5
+waitlog call check off-ringing: .* -> call check ok 5
+waitlog call check off-talking: .* -> call check ok 5
+waitlog call check hudhidden-ringing: .* -> call check ok 5
+waitlog call check hudhidden-talking: .* -> call check ok 5
+waitlog call check onfoot: .* -> call check ok 5
+waitlog call check after-boarding: .* -> call check ok 5

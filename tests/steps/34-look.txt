@@ -1,0 +1,44 @@
+# Look highlight on foot: a demo box the size of an item in front of Rania (turned away from the wall first), the
+# halo on it when looked at, gone when the look leaves, and what the game targets meanwhile.
+waitlog Scenes: Main 120
+wait 12
+cmd title
+wait 6
+cmd continue
+waitlog Cockpit view on 220
+wait 4
+cmd park
+wait 2
+cmd press Action1 0.2
+wait 3
+cmd press Action1 0.2
+wait 3
+cmd press Action1 0.2
+wait 12
+capture 34-start
+cmd vrstick 0 0 1 0 0.3
+wait 0.6
+cmd vrstick 0 0 1 0 0.3
+wait 0.6
+cmd vrstick 0 0 1 0 0.3
+wait 0.6
+cmd vrstick 0 0 1 0 0.3
+wait 0.6
+cmd vrstick 0 0 1 0 0.3
+wait 0.6
+cmd vrstick 0 0 1 0 0.3
+wait 2
+cmd look demo
+wait 2
+cmd look
+capture 34-before
+cmd look nearest
+wait 2
+cmd look
+capture 34-look
+cmd look
+cmd look free
+cmd vrstick 0 0 1 0 0.3
+wait 2
+cmd look
+capture 34-after

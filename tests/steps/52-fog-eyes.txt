@@ -1,0 +1,113 @@
+# The city's fog alike in both eyes (StereoFixes). The game's fog (GlobalFog) works from the camera's centred frustum,
+# but each headset eye has its own off-centre one, so the fog came out thicker in one eye than the other. The fix
+# rewrites the fog's direction vectors for each eye. `fx eyes off` puts the game's vectors back, `fx pp GlobalFog off`
+# removes the fog (the reference).
+# The null headset's eyes share one centred frustum, so there the fog looks the same with or without the fix.
+# `fx eyes fake 8 63 4` gives it real headset eyes (frustums turned 8 deg outward, 63 mm apart, 4 deg more down than
+# up, made-up values) so the bug shows. Title, cockpit, then on foot.
+#
+# Captures (SteamVR headset window: left eye on the left 1000 px, right eye on the right; with fake eyes, allow a
+# shift of about 276 px between the eyes):
+#  - 52-*-fake-game, fix OFF: the haze over the city and the bright band near the horizon differ between the eyes.
+#  - 52-*-fake-fixed, fix ON: the same haze, beams and lamp halos on the same buildings in both eyes.
+#  - 52-*-fake-hx-game: the volumetric light recorded once for both eyes like the game does (`fx hx off`): halos and
+#    beams shifted in one eye only.
+#  - 52-*-fake-nofog: no fog at all, to see what the fog itself adds.
+#
+# Check:
+#  - "Fog per eye on 'MenuCamera'" (the game's vectors fit the eyes' layout within a few %)
+#  - "Stereo fixes: the volumetric light recorded for each eye on", and `fx hx` / `fx eyes` lines with left AND right
+#    pass counts growing
+#  - "is drawn with the turned frustum" for both eyes (if it says "the fake did not hold", the fake captures prove nothing)
+#  - `fx eyes dump`: with fake eyes the left and right Z vectors differ from each other and from the game's
+#  - `eyes 2`: no renderer or light changes between the eyes
+waitlog Scenes: Main 120
+wait 12
+cmd title
+wait 6
+cmd status
+cmd fx eyes
+cmd fx pp
+cmd eyes 2
+capture 52-title-fixed
+mirror 52-title-fixed
+cmd fx eyes off
+wait 2
+capture 52-title-game
+cmd fx eyes on
+cmd fx eyes fake 8 63 4
+wait 2
+cmd fx eyes dump
+capture 52-title-fake-fixed
+cmd fx eyes off
+wait 2
+cmd fx eyes dump
+capture 52-title-fake-game
+cmd fx pp GlobalFog off
+wait 2
+capture 52-title-fake-nofog
+cmd fx pp reset
+cmd fx eyes on
+cmd fx eyes fake off
+wait 1
+cmd continue
+waitlog Cockpit view on 220
+wait 8
+cmd fx eyes
+cmd fx pp
+cmd eyes 2
+capture 52-cockpit-fixed
+mirror 52-cockpit-fixed
+cmd fx eyes off
+wait 2
+capture 52-cockpit-game
+cmd fx eyes on
+cmd fx eyes fake 8 63 4
+wait 2
+cmd fx eyes dump
+capture 52-cockpit-fake-fixed
+cmd fx hx off
+wait 2
+cmd fx hx
+capture 52-cockpit-fake-hx-game
+cmd fx hx on
+wait 1
+cmd fx eyes off
+wait 2
+capture 52-cockpit-fake-game
+cmd fx pp GlobalFog off
+wait 2
+capture 52-cockpit-fake-nofog
+cmd fx pp reset
+cmd fx eyes on
+cmd fx eyes fake off
+wait 2
+cmd park
+wait 2
+cmd press Action1 0.2
+wait 3
+cmd press Action1 0.2
+wait 3
+cmd press Action1 0.2
+wait 12
+cmd fx eyes
+capture 52-onfoot-fixed
+cmd fx eyes fake 8 63 4
+wait 2
+capture 52-onfoot-fake-fixed
+cmd fx hx off
+wait 2
+cmd fx hx
+capture 52-onfoot-fake-hx-game
+cmd fx hx on
+wait 1
+cmd fx eyes off
+wait 2
+capture 52-onfoot-fake-game
+cmd fx pp GlobalFog off
+wait 2
+capture 52-onfoot-fake-nofog
+cmd fx pp reset
+cmd fx eyes on
+cmd fx eyes fake off
+cmd fx eyes

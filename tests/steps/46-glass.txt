@@ -1,0 +1,33 @@
+# The HOVA's windows alike in both eyes (CockpitWindowBlur = false, the default). The game's "Windshield Shader"
+# frosts the glass by blurring the picture behind it, and in a headset that smeared the lights behind the glass in the
+# left eye only. The run stays at rest in the cockpit; each capture is the headset window, left eye on the left.
+#
+# Check: "HOVA windows: the blur behind the glass is off in VR on 5 window(s)", and each `glass` line after a fix
+# says "clear (blur off in VR)" with every window "drawn with blur 0 grain 0".
+# Captures:
+#  - 46-clear: the fix, the lights behind the windscreen look the same in both eyes; drops, wipers and tint stay.
+#  - 46-game: the game's blur back (`glass game`), the left eye smears again. That's the bug, for comparison.
+#  - 46-windows-off: no windows at all, the reference. 46-clear should look like it, plus the drops.
+#  - 46-clear-again: back to the fix (`glass clear`), like a player switching the setting off mid-game.
+waitlog Scenes: Main 120
+wait 12
+cmd title
+wait 6
+cmd continue
+waitlog Cockpit view on 220
+wait 8
+waitlog HOVA windows: the blur behind the glass is off 20
+cmd glass
+capture 46-clear
+cmd glass game
+wait 3
+cmd glass
+capture 46-game
+cmd glass clear
+cmd glass off
+wait 3
+capture 46-windows-off
+cmd glass reset
+wait 3
+cmd glass
+capture 46-clear-again

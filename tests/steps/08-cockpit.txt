@@ -1,0 +1,39 @@
+# Cockpit in both eyes, laser raycast log on the main menu, on foot with snap turn.
+waitlog Scenes: Main 120
+wait 12
+cmd title
+wait 6
+cmd uipoint 120 150
+cmd uipoint 960 540
+wait 1
+cmd status
+cmd continue
+wait 40
+cmd status
+capture 08-cockpit
+mirror 08-cockpit
+cmd cams
+cmd vignette 4
+wait 1
+capture 08-vignette
+wait 4
+cmd park
+wait 2
+cmd press Action1 0.2
+wait 3
+cmd press Action1 0.2
+wait 3
+cmd press Action1 0.2
+wait 12
+cmd status
+capture 08-onfoot
+cmd cams
+cmd vrstick 0 0 1 0 0.3
+wait 2
+capture 08-onfoot-snap
+cmd cams
+cmd vrstick 0 0.9 0 0 2
+wait 3
+capture 08-onfoot-walk
+cmd cams
+cmd status

@@ -1,0 +1,55 @@
+# The HUD at a trader (the rest of the HUD is in 38-hud). Rania gets out of the HOVA, walks up to the nearest person
+# with items to offer and talks to them: a line on foot, then their trade window.
+# Needs a save parked near a trader: bring your own save (a folder of .sav files) with -SaveFixture <folder>.
+#   tools\test\Run-VRTest.ps1 -Steps tests\steps\57-hud-trader.txt -SaveFixture <folder>
+# With no trader around, the run stops at `waitlog goto: reached trader` instead of pressing buttons on whatever is
+# near.
+#
+# Check: `hud expect Dialogue 8` logs "hud check:", not "hud check FAILED"; `uimap` gives the canvases pinned to the
+# 1080p layout.
+# Captures: 57-trader-line shows the line as a HUD piece; 57-trade and 57-trade2 show the whole trade window
+# (portrait, line, offers, description, buttons) in front of the eyes, no radar, the offers readable.
+waitlog Scenes: Main 120
+wait 12
+cmd title
+wait 6
+cmd continue
+waitlog Cockpit view on 220
+wait 6
+cmd park
+wait 2
+cmd press Action1 0.2
+wait 3
+cmd press Action1 0.2
+wait 3
+cmd press Action1 0.2
+wait 12
+cmd status
+cmd goto trader
+waitlog goto: reached trader 10
+wait 2
+cmd onfoot
+cmd press Action1 0.2
+cmd hud expect Dialogue 8
+wait 4
+cmd status
+cmd hud
+capture 57-trader-line
+mirror 57-trader-line
+cmd press Action1 0.2
+wait 3
+cmd status
+cmd focus
+capture 57-trade
+cmd press Action1 0.2
+wait 3
+cmd status
+cmd focus
+cmd uimap
+capture 57-trade2
+mirror 57-trade2
+cmd press Action2 0.2
+wait 2
+cmd press Action2 0.2
+wait 2
+cmd status

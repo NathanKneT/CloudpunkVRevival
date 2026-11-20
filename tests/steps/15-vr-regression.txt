@@ -1,0 +1,20 @@
+# Quick regression: patches apply, nothing throws, ScreenEffects scales the drink effect (Full, then Reduced).
+waitlog Scenes: Main 120
+wait 12
+cmd title
+wait 6
+cmd uipoint 110 118
+wait 1
+capture 15-menu
+cmd continue
+wait 40
+cmd status
+capture 15-cockpit
+cmd effects full
+cmd drink
+wait 6
+mirror 15-drink-full
+cmd effects reduced
+wait 2
+mirror 15-drink-reduced
+cmd status

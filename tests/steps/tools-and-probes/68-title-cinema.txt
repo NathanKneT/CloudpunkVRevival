@@ -1,0 +1,98 @@
+# Filming tool, not a pass/fail test (though it checks a lot on the way): the title shot, flat at 2560x1440. The main
+# menu with its menu hidden (F2 there), the free camera on the menu's own camera pushing in slowly on the sign, the
+# VREVIVAL relight 1 s into the take, frame by frame; then everything back and the menu working. Run flat:
+#   tools\test\Run-VRTest.ps1 -Steps tests\steps\tools-and-probes\68-title-cinema.txt -NoHeadset -Width 2560 -Height 1440
+# The VR side of the clean menu is tests\steps\68-title-cinema-vr.txt.
+# `clean key` is what F2 does: on the main menu it hides the menu and holds its input (Cross and the mouse do nothing);
+# F2 again brings it back with CONTINUE still selected.
+#
+# Check:
+#  - every `clean check` ends in "-> clean check ok" ("(all back)" with the menu shown), and "clean watch 1 (take)" in
+#    "-> clean watch ok": no menu, no free camera line and the input held through the stills and the take.
+#  - "freecam: on, the main menu's camera" gives the sign's centre, its distance and the yaw/pitch straight at it,
+#    handy to write title paths by hand ("space": "world").
+#  - "read back identical", "freecam keys done: 2 still(s) of 2560x1440", "freecam take 1 done", "freecam take 1
+#    render:", then "freecam take 1 relight cues" (one per letter's crackle, also in relight-cues.txt: check two or
+#    three in the PNGs, the frame before should be dark).
+#  - "freecam: off (developer command); the main menu's camera back", with "moved back before drawing 0 time(s)" and
+#    "Cinemachine switched back on 0 time(s)": anything else means something moved the menu camera meanwhile.
+#  - "Main menu: gone" after the last Cross: the menu still works. Both Cross presses need a selected button ("the
+#    selection on 'Continue...'"); "nothing selected" is the game's selection, not the hidden menu.
+# Pictures (game window): 68-menu and 68-menu-back the menu as usual; 68-hidden the same view with no menu at all;
+# 68-after-take the sign lit; 68-camera-back the menu's own framing, still no menu; 68-ingame the game.
+# The take: tests\captures\takes-<time>\<time>-test68-keys\key1.png, key2.png (the sign centred, then closer), and
+# ...-test68-take1\00000.png ... 00360.png, a slow push-in, the letters lighting up left to right by about frame 310.
+waitlog Scenes: Main 120
+waitlog Menu sign: VREVIVAL built 120
+wait 8
+cmd title
+waitlog Main menu: up 60
+waitlog Menu sign: relight 1 done 60
+wait 4
+cmd screen
+waitlog screen: ${Width}x${Height} .*: as asked 20
+cmd clean check menu
+waitlog clean check menu: on the main menu, the clean frame off, the menu shown;.*-> clean check ok \(all back\)\s*$ 10
+mirror 68-menu
+
+# F2 on the main menu: the menu goes, the scene and the sign stay
+cmd clean key
+waitlog Clean frame hides the main menu: 10
+wait 1
+cmd clean check hidden
+waitlog clean check hidden: on the main menu, the clean frame on, the menu hidden;.*-> clean check ok\s*$ 10
+mirror 68-hidden
+
+# its input is held: Cross on CONTINUE does nothing
+cmd press Action1 0.2
+wait 4
+cmd clean check after-press
+waitlog clean check after-press: on the main menu, the clean frame on, the menu hidden;.*-> clean check ok\s*$ 10
+
+# the free camera on the menu's camera: a slow push-in centred on the sign, the relight 1 s into the take
+cmd freecam on
+waitlog freecam: on, the main menu's camera 20
+cmd freecam clear
+cmd freecam aim sign
+cmd freecam key
+cmd freecam nudge 0 0 15
+cmd freecam aim sign
+cmd freecam key
+cmd freecam relight 1
+cmd freecam save test68
+waitlog freecam: path saved to .*test68\.json.* read back identical 10
+cmd clean watch 900 take
+cmd freecam keys png
+waitlog freecam keys done 120
+cmd freecam fps 60
+cmd freecam frames png
+cmd freecam play 6
+waitlog freecam take 1: 10
+waitlog Menu sign: the relight played by a free camera take 30
+waitlog freecam take 1 done 900
+waitlog freecam take 1 render: 30
+waitlog freecam take 1 relight cues 10
+waitlog Menu sign: the take's relight over 10
+cmd clean watch end
+waitlog clean watch 1 \(take\): over .*-> clean watch ok\s*$ 10
+cmd freecam frames off
+cmd clean check after-take
+waitlog clean check after-take: on the main menu, the clean frame on, the menu hidden;.*-> clean check ok\s*$ 10
+mirror 68-after-take
+
+# everything back: the menu's camera, then the menu, which works
+cmd freecam off
+waitlog freecam: off \(developer command\); the main menu's camera back: Cinemachine on 10
+wait 3
+mirror 68-camera-back
+cmd clean key
+waitlog Clean frame: the main menu back 10
+wait 1
+cmd clean check back
+waitlog clean check back: on the main menu, the clean frame off, the menu shown;.*-> clean check ok \(all back\)\s*$ 10
+mirror 68-menu-back
+cmd press Action1 0.2
+waitlog Main menu: gone 60
+wait 30
+cmd status
+mirror 68-ingame

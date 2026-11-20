@@ -1,0 +1,6 @@
+# First boot: does Unity's OpenVR come up after the preloader patch?
+waitlog Scenes: Main 120
+wait 15
+capture 01-boot-menu
+cmd status
+wait 2

@@ -1,0 +1,48 @@
+# Render hook replaces Application.onBeforeRender (stripped in this build).
+waitlog Scenes: Main 120
+wait 12
+capture 03-menu
+cmd status
+cmd continue
+wait 35
+capture 03-ingame-a
+cmd status
+cmd dump
+wait 3
+cmd press DPadUp 0.15
+wait 6
+capture 03-ingame-b
+cmd status
+cmd stick 0 0 0.9 0 0.3
+wait 2
+capture 03-ingame-c
+cmd press Options 0.15
+wait 3
+capture 03-pause
+cmd status
+# Get out of the HOVA: put the car in the nearest parking volume, then Interact parks it.
+cmd press Action2 0.15
+wait 2
+cmd park
+wait 2
+cmd press Action1 0.2
+wait 12
+capture 03-onfoot-a
+cmd status
+cmd dump
+cmd stick 0 0.8 0 0 1.5
+wait 3
+capture 03-onfoot-b
+cmd stick 0 0 0.9 0 0.2
+wait 2
+capture 03-onfoot-turn
+cmd status
+cmd xref Player EnableCamera
+cmd xref Player DisableCamera
+cmd xref VehicleInterior UpdatePosition
+cmd xref VehicleInterior FreeLookCamera
+cmd xref PlayerCar SwitchToCockpit_Local
+wait 2
+cmd xref RedAlliance.Util.MainCameraVehicleRenderer OnPostRender
+cmd xref RedAlliance.Util.InteriorCameraSetTarget OnPreRender
+wait 4

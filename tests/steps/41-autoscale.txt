@@ -1,0 +1,47 @@
+# AutoRenderScale at work on the null headset, about 4 minutes.
+# The null headset is easy to draw at 90 Hz, so the eye images are made twice SteamVR's size per side
+# (`perf supersample 2`, no MaxEyeResolution cap) to load the GPU. Then the load is lightened (supersample 1.3):
+# a step up only waits during play and is taken when the pause menu opens.
+#
+# Check: "Render resolution: eye ..." lines stepping down within a few seconds (70% per side at most at 90 Hz), and
+# no "no frame reached SteamVR" or "showed an old frame" warning. With the lighter load the Performance line says
+# "step up waiting for a menu or a black screen" until the menu opens. The "perf <label>:" lines give the GPU time
+# at each stage.
+waitlog Scenes: Main 120
+wait 12
+cmd title
+wait 6
+cmd continue
+waitlog Cockpit view on 220
+wait 15
+cmd perf measure before 8
+wait 9
+cmd perf res 0
+cmd perf supersample 2
+wait 3
+capture 41-supersample-2
+cmd perf measure supersample-2-first-seconds 4
+wait 30
+capture 41-stepped-down
+mirror 41-stepped-down
+cmd perf
+cmd perf measure stepped-down 8
+wait 40
+cmd perf supersample 1.3
+wait 60
+cmd perf
+cmd perf measure lighter-load 8
+wait 30
+cmd vrpress menu
+wait 6
+capture 41-menu-step-up
+cmd perf
+cmd vrpress menu
+wait 20
+cmd perf measure after-step-up 8
+wait 10
+cmd perf reset all
+wait 6
+cmd perf
+cmd status
+unitylog Cannot set field of view

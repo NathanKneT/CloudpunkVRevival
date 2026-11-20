@@ -1,0 +1,49 @@
+# Filming tool, not a pass/fail test: renders one free camera shot (a path JSON) in the flat game at a set size, a
+# still per keyframe, then the take frame by frame. Run flat with your shots folder and the shot's name:
+#   tools\test\Run-VRTest.ps1 -Steps tests\steps\tools-and-probes\67-render.txt -NoHeadset -Width 2560 -Height 1440 -Shots <your shots folder> -Vars Shot=<shot name>
+# -Shots copies the folder's *.json into BepInEx\config\CloudpunkVR-shots for the run (put back after); ${Shot} is the
+# file name without .json. -Width/-Height set the window and the mod keeps it that size (--keep-screen-size).
+# The save has to be in the shot's district (the camera only sees what the game has loaded): if your last save is
+# elsewhere, bring your own save (a folder of .sav files) with -SaveFixture <folder>.
+#
+# Output (the harness moves it there after the run):
+#   tests\captures\takes-<run time>\<time>-<shot>-keys\key1.png ...    one still per keyframe
+#   tests\captures\takes-<run time>\<time>-<shot>-take1\00000.png ...  every frame at 60 fps, plus path.json
+# Video: ffmpeg -framerate 60 -i %05d.png -c:v libx264 -crf 16 -pix_fmt yuv420p take.mp4
+#
+# Check: the window line says "as asked" (not "NOT as asked", not "not DPI aware"); "freecam: path <shot> loaded from"
+# with no "Made in X, you are in Y" (wrong district); "freecam keys done"; "freecam take 1 done", then
+# "freecam take 1 render:" with the real cost at this size.
+# Look at: key*.png framed as the shot file says; frames at the asked size with no HUD, prompts or free camera line;
+# 00000.png framed like key1.png, the last frame like the last key.
+waitlog Scenes: Main 120
+wait 10
+cmd title
+wait 5
+cmd continue
+wait 30
+cmd status
+cmd screen
+waitlog screen: ${Width}x${Height} .*: as asked 20
+cmd freecam on
+waitlog freecam: on, the game's camera 20
+cmd freecam load ${Shot}
+waitlog freecam: path ${Shot} loaded from 10
+cmd freecam check
+wait 5
+
+# one still posed exactly at each keyframe
+cmd freecam keys png
+waitlog freecam keys done 300
+mirror 67-${Shot}-after-keys
+
+# the take, every frame to disk at 60 fps fixed steps
+cmd freecam fps 60
+cmd freecam frames png
+cmd freecam play
+waitlog freecam take 1: 10
+waitlog freecam take 1 done 1800
+waitlog freecam take 1 render: 30
+cmd freecam frames off
+cmd freecam off
+waitlog freecam: off 10

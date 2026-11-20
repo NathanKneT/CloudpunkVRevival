@@ -1,0 +1,59 @@
+# The volumetric light (beams, light shafts, haze around lamps) alike in both eyes, on the null headset as it is (no
+# fake eyes): its eyes are 63 mm apart, so the game's single recording (`fx hx off`) puts nearby beams and halos where
+# the other eye would see them. Each scene is captured three times in a row: fix on, off, on again. Title, cockpit,
+# on foot.
+#
+# Captures (SteamVR headset window: left eye on the left 1000 px, right eye on the right): compare each capture's left
+# eye with its right eye (mean |L-R|, best horizontal shift of a few px). 56-*-hx-off (fix OFF) should differ more
+# than 56-*-hx-on and 56-*-hx-on2 (fix ON). The title camera drifts slowly, so compare on/off only through their own
+# left-right difference.
+#
+# Check: "the right eye's projection is the same after it was lent and put back" (once); "Stereo fixes: the volumetric
+# light recorded for each eye on" for 'MenuCamera' then 'Main Camera' (with its cost per frame); every "fx hx lights:"
+# line says "none doubled" (or "none casting shadows here"); no "Volumetric light per eye stopped".
+waitlog Scenes: Main 120
+wait 12
+cmd title
+wait 6
+cmd fx hx on
+wait 2
+cmd fx hx lights
+capture 56-title-hx-on
+cmd fx hx off
+wait 1
+capture 56-title-hx-off
+cmd fx hx on
+wait 1
+capture 56-title-hx-on2
+cmd fx hx
+cmd continue
+waitlog Cockpit view on 220
+wait 8
+cmd fx hx lights
+wait 1
+capture 56-cockpit-hx-on
+cmd fx hx off
+wait 1
+capture 56-cockpit-hx-off
+cmd fx hx on
+wait 1
+capture 56-cockpit-hx-on2
+cmd fx hx
+cmd park
+wait 2
+cmd press Action1 0.2
+wait 3
+cmd press Action1 0.2
+wait 3
+cmd press Action1 0.2
+wait 12
+cmd fx hx lights
+wait 1
+capture 56-onfoot-hx-on
+cmd fx hx off
+wait 1
+capture 56-onfoot-hx-off
+cmd fx hx on
+wait 1
+capture 56-onfoot-hx-on2
+cmd fx hx

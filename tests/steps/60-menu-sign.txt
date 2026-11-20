@@ -1,0 +1,103 @@
+# The main menu's sign: VREVIVAL under the game's CLOUDPUNK (MenuSign), cut from the game's own neon letter pictures,
+# dark when the menu comes up, then relit letter by letter. Run it twice, same file:
+#   tools\test\Run-VRTest.ps1 -Steps tests\steps\60-menu-sign.txt               (null headset: both eyes)
+#   tools\test\Run-VRTest.ps1 -Steps tests\steps\60-menu-sign.txt -NoHeadset    (flat: "capture" lines are skipped)
+# The relight starts once the menu is in view, during the menu camera's glide (60-glide-*). `sign at <s>` holds the
+# relight at s seconds so the frames are the same every run; `sign relight` is what F11 does; `sign snap` writes
+# close-ups without bloom and fog to BepInEx\sign-<name>-line.png and -sign.png.
+#
+# Check:
+#  - "Menu sign: VREVIVAL built under the game's CLOUDPUNK", 8 letters, layer 31; no "missing", "sound none" or
+#    "not as expected"
+#  - eight "Menu sign letter" lines, letter 6 with "flickers: U-off under the game's Flicker layer"
+#  - "Menu sign: relight 1 started" then "relight 1 done", all 8 letters lit after about 4.15 s
+#  - "Menu sign check 1: drawn by 'MenuCamera' in both eyes" (flat: its single view), 8/8 letters in each eye, about
+#    as many passes per eye; "whole in view", clouds and cab not in front. "FAILED", "IN FRONT" or "NOT whole in
+#    view" are failures (the waitlogs match either way so the run goes on). Same for check 2.
+#  - relights 2 and 3 log the same timeline as relight 1
+#  - "Menu sign: off (MenuSign = false)" then "on again (MenuSign = true)"; in the game, `sign` says "in the menu's
+#    view: no"
+#
+# Captures (60-*.png: both eyes; 60-*-mirror.png: the game's window):
+#  - 60-sign, 60-sign-clean (menu card hidden), 60-relit: VREVIVAL in the same neon as CLOUDPUNK, stepping down to the
+#    right like it, in front of the cloud, ending before the cab; same glow, same in both eyes. The 6th letter may be
+#    caught dim: it flickers like the U of PUNK.
+#  - 60-relight-0.50 to 3.50: the relight held at each time (0.50 all dark, then left to right, the 6th V failing once
+#    and catching last). 60-noflicker: the 6th V lit like the others. 60-off: the game's sign alone; 60-on: back.
+#  - BepInEx\sign-60-lit-line.png: close-up, no seams, edges as clean as CLOUDPUNK's.
+#  - 60-ingame: nothing of the sign in the game.
+waitlog Scenes: Main 120
+waitlog Menu sign: VREVIVAL built 120
+wait 8
+cmd title
+waitlog Menu sign: relight 1 started 60
+capture 60-glide-start
+waitlog Menu sign: relight 1 done 30
+capture 60-glide-lit
+mirror 60-glide-lit
+waitlog Menu sign check 1( FAILED)?: drawn 15
+wait 6
+cmd status
+cmd sign
+capture 60-sign
+mirror 60-sign
+cmd overlay off
+wait 1
+capture 60-sign-clean
+cmd overlay on
+cmd sign snap 60-lit
+cmd sign check
+waitlog Menu sign check 2( FAILED)?: drawn 15
+cmd sign at 0.5
+wait 1
+capture 60-relight-0.50
+mirror 60-relight-0.50
+cmd sign snap 60-dark
+cmd sign at 0.9
+wait 1
+capture 60-relight-0.90
+mirror 60-relight-0.90
+cmd sign at 1.6
+wait 1
+capture 60-relight-1.60
+mirror 60-relight-1.60
+cmd sign at 2.3
+wait 1
+capture 60-relight-2.30
+mirror 60-relight-2.30
+cmd sign at 3.2
+wait 1
+capture 60-relight-3.20
+mirror 60-relight-3.20
+cmd sign at 3.5
+wait 1
+capture 60-relight-3.50
+mirror 60-relight-3.50
+cmd sign lit
+cmd sign relight
+waitlog Menu sign: relight 2 done 15
+wait 1
+capture 60-relit
+mirror 60-relit
+cmd sign flicker off
+wait 1
+capture 60-noflicker
+mirror 60-noflicker
+cmd sign flicker on
+cmd sign off
+waitlog Menu sign: off 10
+wait 1
+capture 60-off
+mirror 60-off
+cmd sign on
+waitlog Menu sign: relight 3 done 15
+wait 1
+capture 60-on
+mirror 60-on
+cmd sign
+cmd continue
+wait 45
+cmd status
+cmd sign
+capture 60-ingame
+mirror 60-ingame

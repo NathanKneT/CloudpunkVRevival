@@ -1,0 +1,137 @@
+# The game's on-foot camera and its camera tutorial in VR (dev command `footview`).
+# Needs a save that starts flying in the HOVA with a spot to park and get out: bring your own save (a folder of .sav
+# files) with -SaveFixture <folder>.
+#   tools\test\Run-VRTest.ps1 -Steps tests\steps\70-tutorial-camera.txt -SaveFixture <folder>
+# A new game starts on foot with the game's fixed camera behind Rania, and its camera tutorial asks for Square. In a
+# headset that view stood behind her and Square never reached the game outside menus. Each command carries a label
+# ("[footview third a]") that shows up in the lines it causes, so each waitlog waits for its own line. On foot:
+#  A  behind Rania, as a new game starts: the mod cuts to the game's first-person view.
+#  B  the free camera orbiting her: first person again. Z  the game's own zoom out: zoomed back in.
+#  C  the game's camera tutorial: the switch ends it by the game's own rule, about 3.5 s later.
+#  D  switches held: Square does nothing outside the tutorial; in it, it goes to the game and lands in first person.
+#  E  the camera forced behind her every frame for 3 s: three switches, then the mod leaves it alone and tries again
+#     20 s later.
+#  F  FirstPersonOnFoot off: the game's camera is left alone and Square is the game's unlock, like on a pad; on again,
+#     the switch comes at once.
+#
+# Check: every waitlog fails the run if its line doesn't come. The `cutcheck` after A: 1 blink (the cut, hidden).
+# No "the first-person view waits", no "switch to first person failed", no "could not be put back", no "On foot view:"
+# or "VR update:" errors.
+# Captures: 70-a-first (Rania's eyes), 70-d-behind (behind her, switches held), 70-d-square (first person after Square
+# in the tutorial), 70-e-behind (left alone), 70-e-first (after the retry), 70-f-off (behind her, setting off).
+waitlog Scenes: Main 120
+wait 12
+cmd title
+wait 6
+cmd continue
+waitlog Cockpit view on 220
+wait 6
+cmd menu close
+cmd park
+wait 2
+cmd press Action1 0.2
+wait 3
+cmd press Action1 0.2
+wait 3
+cmd press Action1 0.2
+waitlog View: \w+ -> OnFoot 20
+wait 6
+cmd status
+cmd footview check start
+cmd cutcheck
+# A: behind Rania, as a new game starts.
+cmd footview third a
+waitlog On foot: switch #\d+ \[footview third a\]: the game's camera was the fixed one behind Rania 5
+wait 1
+cmd footview check a
+waitlog footview: check a: first person 5
+cmd cutcheck
+capture 70-a-first
+mirror 70-a-first
+# B: the free camera orbiting her.
+cmd footview orbit b
+waitlog On foot: switch #\d+ \[footview orbit b\]: the game's camera was the free one orbiting Rania 5
+wait 1
+cmd footview check b
+waitlog footview: check b: first person 5
+# Z: the game's own zoom out, as the mouse wheel.
+cmd press DPadDown 0.1
+wait 2
+cmd footview check z
+waitlog footview: check z: first person.*left alone False 5
+# C: the game's camera tutorial, ended by the switch.
+cmd footview tutorial c
+waitlog Camera tutorial \[footview tutorial c\]: the game shows its "unlock the camera" step 5
+waitlog On foot: switch #\d+ \[footview tutorial c\]: 5
+waitlog Camera tutorial \[footview tutorial c\]: its "unlock the camera" step \(Square\) is over after 10
+unitylog Unlocking trigger:
+wait 1
+cmd footview check c
+waitlog footview: check c: first person.*tutorials: camera hidden 5
+# D: the switches held; Square only counts in the tutorial, and lands in first person.
+cmd footview hold
+cmd footview third d0
+wait 1
+cmd footview check d0
+waitlog footview: check d0: NOT first person 5
+capture 70-d-behind
+cmd vrpress freelook
+wait 1
+cmd footview check d1
+waitlog footview: check d1: NOT first person.*cameras on: fixed True 5
+cmd footview tutorial d2
+wait 2
+cmd footview check d2
+waitlog footview: check d2: NOT first person.*tutorials: camera showing.*Square to the game True 5
+cmd vrpress freelook
+waitlog Camera tutorial \[footview tutorial d2\]: Square goes to the game as its camera unlock 5
+wait 1
+cmd footview check d3
+waitlog footview: check d3: first person.*orbit False.*hold True 5
+capture 70-d-square
+wait 4
+cmd footview check d4
+waitlog footview: check d4: first person.*tutorials: camera hidden 5
+cmd vrpress freelook
+wait 1
+cmd footview check d5
+waitlog footview: check d5: first person 5
+cmd footview hold off
+wait 1
+# E: the camera locked behind her every frame for 3 s, after the game's updates.
+cmd cutcheck
+cmd footview fight 3 e
+waitlog On foot: switch #\d+ \[footview fight e\]: 5
+waitlog On foot: the game put its camera back 3 times within 2 s of a switch \[footview fight e\] 10
+wait 3
+cmd footview check e0
+waitlog footview: check e0: NOT first person.*left alone True 5
+capture 70-e-behind
+waitlog On foot: trying the first-person view again \(20 s on\) \[footview fight e\] 30
+wait 1
+cmd footview check e1
+waitlog footview: check e1: first person 5
+capture 70-e-first
+cmd cutcheck
+# F: the setting off leaves the game's camera alone; on again, the switch comes.
+cmd vrsettings set first-person off
+cmd footview third f
+wait 2
+cmd footview check f0
+waitlog footview: check f0: NOT first person.*setting off 5
+capture 70-f-off
+cmd vrpress freelook
+wait 1
+cmd footview check f1
+waitlog footview: check f1: NOT first person.*cameras on: fixed False, orbit True 5
+cmd vrpress freelook
+wait 1
+cmd footview check f2
+waitlog footview: check f2: NOT first person.*cameras on: fixed True, orbit False 5
+cmd vrsettings set first-person on
+waitlog On foot: switch #\d+ \[footview third f\]: the game's camera was the fixed one behind Rania 5
+wait 1
+cmd footview check f3
+waitlog footview: check f3: first person.*setting on 5
+cmd status
+cmd footview

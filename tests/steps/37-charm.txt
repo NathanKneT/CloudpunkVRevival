@@ -1,0 +1,84 @@
+# The cockpit charm: Camus's voxel head on a chain from the HOVA's ceiling (dev command `charm`).
+# Where it hangs and what's ahead of it (`charm tree`), swung to 70 degrees and braked there (it must not cross
+# anything ahead), then moved nearer the middle of the view and poked, swung and spun, swinging with the throttle,
+# a turn and the brake, hidden in the outside view, up close, and touched by the demo hands.
+#
+# Check: each `charm` line also says "strafe buttons kept from the game" (a grab near the charm never strafes).
+waitlog Scenes: Main 120
+wait 12
+cmd title
+wait 6
+cmd continue
+waitlog Cockpit view on 220
+wait 4
+cmd charm tree
+cmd charm
+capture 37-charm-rest
+mirror 37-charm-rest
+cmd charm swing 70
+wait 0.3
+capture 37-charm-swing70
+cmd charm
+wait 3
+cmd press RightTrigger 3
+wait 1
+cmd press LeftTrigger 2
+wait 0.4
+cmd charm
+capture 37-charm-brake-default
+mirror 37-charm-brake-default
+wait 3
+cmd charm at 0.10 0.21 0.30
+wait 2
+cmd charm
+capture 37-charm-middle
+cmd charm poke
+wait 0.2
+capture 37-charm-poke
+wait 2
+cmd charm swing 40
+wait 0.3
+capture 37-charm-swing
+cmd charm
+cmd charm spin 25
+wait 0.8
+capture 37-charm-spin
+cmd charm
+wait 4
+cmd press RightTrigger 3
+wait 1
+cmd charm
+capture 37-charm-throttle
+cmd stick 1 0 0 0 2
+wait 1
+cmd charm
+capture 37-charm-turn
+wait 2
+cmd press LeftTrigger 2
+wait 0.5
+cmd charm
+capture 37-charm-brake
+wait 3
+cmd vrpress switchview
+wait 3
+cmd charm
+capture 37-charm-outside
+cmd vrpress switchview
+wait 4
+cmd charm
+cmd charm at 0.05 0.12 0.30
+wait 3
+capture 37-charm-close
+mirror 37-charm-close
+cmd charm at 0.11 0.12 0.46
+cmd hands demo -1 1
+wait 2
+cmd charm
+capture 37-charm-hands
+wait 2
+cmd charm
+cmd hands off
+cmd charm place
+wait 2
+cmd charm
+cmd status

@@ -1,0 +1,33 @@
+# Probe, not a pass/fail test: which rain the game draws (the streaks over the view, the cockpit's drops, the sky's,
+# particle systems), and the view with and without the streaks (Rain = Overlay, then Off), in the cockpit and on foot.
+# The older mod got two complaints: the rain moved with the head, and the drops on the ground looked under the asphalt.
+waitlog Scenes: Main 120
+wait 12
+cmd title
+wait 6
+cmd continue
+waitlog Cockpit view on 220
+wait 4
+cmd rain overlay
+wait 2
+cmd rainprobe
+capture 28-cockpit-rain
+cmd rain off
+wait 2
+capture 28-cockpit-norain
+cmd rain overlay
+cmd park
+wait 2
+cmd press Action1 0.2
+wait 3
+cmd press Action1 0.2
+wait 3
+cmd press Action1 0.2
+wait 12
+cmd status
+cmd rainprobe
+capture 28-onfoot-rain
+cmd rain off
+wait 2
+capture 28-onfoot-norain
+cmd rain overlay

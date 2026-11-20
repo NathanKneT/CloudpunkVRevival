@@ -1,0 +1,83 @@
+# The clean frame in the flat game, the same switch as 64-clean-frame:
+#   tools\test\Run-VRTest.ps1 -Steps tests\steps\65-clean-frame-flat.txt -NoHeadset
+# Flat, the game's UI camera draws its HUD straight into the window: the clean frame fades the HUD's canvas groups and
+# keeps the line's box over them (or fades it too); the minimap, district sign and call screen go by their canvases,
+# the floating prompts by their layer. The game's fades to black stay. Calls aren't watched flat, each line moves on
+# by itself.
+#
+# Check: every `clean check` ends in "-> clean check ok" ("(all back)" when off), the call checks say "a line up",
+# and `clean watch` ends in "-> clean watch ok" (0 frames with the HUD, a canvas or the prompts drawn).
+# Captures (game window): 65-before (the game's HUD), 65-clean (none of it), 65-cockpit-clean, 65-call-kept (the
+# game's box only), 65-call-hidden (nothing), 65-menu (the pause menu as usual), 65-off (the HUD back).
+waitlog Scenes: Main 120
+wait 10
+cmd title
+wait 5
+cmd continue
+wait 30
+cmd status
+cmd clean
+cmd clean check before
+mirror 65-before
+cmd clean on
+waitlog Clean frame holds 10
+wait 1
+cmd clean check on
+mirror 65-clean
+cmd clean watch 20 flat
+# The other view of the HOVA (the game's cockpit / outside switch, V or d-pad up), then back.
+cmd press DPadUp 0.2
+wait 4
+cmd status
+cmd clean check cockpit
+mirror 65-cockpit-clean
+cmd press DPadUp 0.2
+wait 4
+cmd status
+waitlog clean watch 1 \(flat\): (over|stopped) 25
+# A call, the line kept, then hidden (one line each, it starts about 4 s in). Each ends in "call (flat game) N: over".
+cmd call Control 1
+wait 6
+cmd clean check call-kept
+mirror 65-call-kept
+waitlog call \(flat game\) 1: over 40
+cmd clean dialogue off
+cmd call Control 1
+wait 6
+cmd clean check call-hidden
+mirror 65-call-hidden
+waitlog call \(flat game\) 2: over 40
+cmd clean dialogue on
+# The game's own HUD toggle while it holds.
+cmd call hud off
+wait 1
+cmd clean check hudtoggle
+cmd call hud on
+wait 1
+# The pause menu: as usual, then held again.
+cmd press Options 0.2
+wait 2
+cmd menu
+cmd clean check menu
+mirror 65-menu
+cmd menu close
+wait 2
+cmd clean check after-menu
+# Off as the key does: the HUD back.
+cmd clean key
+waitlog Clean frame off \(key\) 5
+wait 1
+cmd clean check off
+mirror 65-off
+cmd status
+# The checks.
+waitlog clean check before: .* -> clean check ok \(all back\) 5
+waitlog clean check on: .* -> clean check ok 5
+waitlog clean check cockpit: .* -> clean check ok 5
+waitlog clean check call-kept: .*a line up, the HUD's box (in view|not in view, the dashboard's in view).* -> clean check ok 5
+waitlog clean check call-hidden: .*a line up.* -> clean check ok 5
+waitlog clean check hudtoggle: .* -> clean check ok 5
+waitlog clean check menu: .*stepping aside \(the game's menu\).* -> clean check ok 5
+waitlog clean check after-menu: .* -> clean check ok 5
+waitlog clean check off: .* -> clean check ok \(all back\) 5
+waitlog clean watch 1 \(flat\): over .* -> clean watch ok 5

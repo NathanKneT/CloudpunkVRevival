@@ -1,0 +1,20 @@
+# The game's "press any key" kept for one run (`title keep` while the game loads, same as SkipTitleScreen = false):
+# the prompt shows on the panel, framed on its text, on black. Then `title` passes it and the menu comes up.
+#
+# Check: "is kept for this run", then "shown on the panel (SkipTitleScreen off)"; `hud` gives "menu: content" (the
+# panel), not HUD pieces; no "Title screen: skipped" line.
+# Captures: 54-prompt is the prompt alone in front, no minimap, nothing smeared.
+waitlog Scenes: Startup 60
+cmd title keep
+waitlog Scenes: Main 120
+wait 4
+cmd status
+cmd hud
+cmd focus
+capture 54-prompt
+mirror 54-prompt
+cmd title
+wait 5
+cmd status
+cmd hud
+capture 54-menu

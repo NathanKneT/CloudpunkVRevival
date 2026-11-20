@@ -1,0 +1,25 @@
+# The transition guard must not fire in normal play: flying, the view button pressed by the player (cockpit ->
+# outside -> cockpit), getting out on foot. Every view change and guard step is in the log.
+waitlog Scenes: Main 120
+wait 12
+cmd title
+wait 6
+cmd continue
+waitlog Cockpit view on 220
+wait 4
+cmd vrpress switchview
+wait 3
+capture 27-outside-by-button
+cmd vrpress switchview
+wait 3
+capture 27-cockpit-again
+cmd park
+wait 2
+cmd press Action1 0.2
+wait 3
+cmd press Action1 0.2
+wait 3
+cmd press Action1 0.2
+wait 12
+capture 27-onfoot
+cmd status

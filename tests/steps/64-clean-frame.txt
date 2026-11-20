@@ -1,0 +1,262 @@
+# The clean frame for filming (F2, dev command `clean`): one switch takes the interface out of the picture, the game's
+# and the mod's, while Rania's hands, the wheel, the lever, the coffee, Camus, the cockpit and its mirrors stay.
+# CleanFrameKeepDialogue (on by default) keeps the game's line where it shows. The flat run is 65-clean-frame-flat.
+#
+# `clean check <label>` logs every piece at that moment and ends in "-> clean check ok" (on), "-> clean check ok (all
+# back)" (off) or "-> clean check FAILED: <what>", naming anything still drawn (a HUD piece, the radar, the wrist, the
+# laser, the vignette...). `clean watch <s> <label>` checks every frame for s seconds (flight, passage, getting out,
+# boarding) and ends in "-> clean watch ok". Calls (see 62-call): kept, the game's box shows once; hidden, no box
+# anywhere and the call still ends normally ("-> call watch ok"). The waitlogs at the end check all of it.
+#
+# Captures (capture = headset window, mirror = game window):
+#  64-rest-before / 64-rest-clean: everything up (HUD, radar, minimap, district sign, wrist, vignette), then the same
+#    moment with none of it, the hands, wheel, lever, coffee, Camus and mirrors still there.
+#  64-call-kept: only the game's line ahead above the dashboard. 64-call-hidden: no box anywhere.
+#  64-spectator-clean: the spectator view, clean too. 64-passage-black: just black, no passage card.
+#  64-onfoot-clean: no minimap, money, fuel, jobs, wrist or prompts. 64-onfoot-look: an item looked at, no glow.
+#  64-menu: the pause menu as usual. 64-off-hudhidden: off, but the game's own HUD toggle still hides the HUD.
+#  64-off: everything back at once, the wrist's last line "Filming  clean frame off".
+waitlog Scenes: Main 120
+wait 12
+cmd title
+wait 6
+cmd continue
+waitlog Cockpit view on 220
+waitlog the seat taken 30
+wait 2
+cmd menu close
+cmd status
+cmd clean
+# A: the cockpit at rest with everything up: the radar on, the wrist held in front, a vignette, both hands on the wheel.
+cmd hud radar on
+cmd wrist show
+cmd vignette 40
+cmd wheel grab both
+wait 1.5
+cmd hud
+cmd clean check before
+capture 64-rest-before
+mirror 64-rest-before
+# B: on: all of it goes in the same frame; the hands, the wheel, the lever, the coffee and Camus stay.
+cmd clean on
+waitlog Clean frame on \(developer command\) 5
+waitlog Clean frame holds 5
+wait 0.5
+cmd clean check rest-on
+capture 64-rest-clean
+mirror 64-rest-clean
+cmd wheel release
+# C: in flight, turning (the vignette would come), watched every frame.
+cmd clean watch 12 flight
+cmd press RightTrigger 10
+cmd stick 0.5 0 0 0 8
+wait 4
+cmd clean check flight
+capture 64-flight-clean
+mirror 64-flight-clean
+waitlog clean watch 1 \(flight\): over 15
+# D: a call, the line kept: the game's boxes on the windscreen, once, nothing else.
+cmd call Control 3
+waitlog call watch 1: ringing 10
+wait 0.5
+cmd clean check call-ringing-kept
+capture 64-call-ringing-kept
+mirror 64-call-ringing-kept
+waitlog call watch 1: talking 15
+wait 1
+cmd clean check call-kept
+capture 64-call-kept
+mirror 64-call-kept
+wait 1
+cmd call next
+wait 3
+cmd call next
+wait 3
+cmd call next
+waitlog call watch 1: (over|stopped) 40
+# E: the line hidden: no box anywhere while the call plays.
+cmd clean dialogue off
+wait 0.5
+cmd call Control 3
+waitlog call watch 2: line 1 at 15
+wait 1
+cmd clean check call-hidden
+capture 64-call-hidden
+mirror 64-call-hidden
+wait 1
+cmd call next
+wait 3
+cmd call next
+wait 3
+cmd call next
+waitlog call watch 2: (over|stopped) 40
+# F: HudOnWindshield off, the game's own boxes on the dashboard: hidden (the call screen's canvas off), then kept (once).
+cmd call windshield off
+wait 1
+cmd call Control 2
+waitlog call watch 3: line 1 at 15
+wait 1
+cmd clean check dash-hidden
+capture 64-dash-hidden
+wait 1
+cmd call next
+wait 3
+cmd call next
+waitlog call watch 3: (over|stopped) 40
+cmd clean dialogue on
+wait 0.5
+cmd call Control 2
+waitlog call watch 4: talking 15
+wait 1
+cmd clean check dash-kept
+capture 64-dash-kept
+mirror 64-dash-kept
+wait 1
+cmd call next
+wait 3
+cmd call next
+waitlog call watch 4: (over|stopped) 40
+cmd call windshield on
+wait 1
+# G: the spectator view: the window shows the clean picture too (a copy of the headset's left eye).
+cmd spectator on
+waitlog Spectator view on: 10
+wait 1.5
+mirror 64-spectator-clean
+capture 64-spectator-hmd
+# H: a district passage: black with no passage card, then the cockpit clean again.
+cmd lift
+cmd clean watch 40 passage
+cmd lift enter
+wait 2
+capture 64-passage-black
+waitlog Transition over after .*\(district passage 1\) 60
+wait 3
+cmd clean check after-passage
+capture 64-passage-after
+mirror 64-passage-after
+waitlog clean watch 2 \(passage\): (over|stopped) 45
+# I: parked (no PARK VEHICLE prompt), then on foot: a call as the game's subtitle, an item looked at with no glow.
+cmd park
+wait 2
+cmd menu close
+wait 1
+cmd clean check parked
+capture 64-parked-clean
+cmd clean watch 25 getting-out
+cmd press Action1 0.2
+wait 3
+cmd press Action1 0.2
+wait 3
+cmd press Action1 0.2
+waitlog View: Cockpit -> OnFoot 15
+wait 6
+cmd status
+cmd clean check onfoot
+capture 64-onfoot-clean
+mirror 64-onfoot-clean
+waitlog clean watch 3 \(getting-out\): (over|stopped) 30
+cmd call Control 2
+waitlog call watch 5: talking 15
+wait 1
+cmd clean check onfoot-call
+capture 64-onfoot-call
+mirror 64-onfoot-call
+wait 1
+cmd call next
+wait 3
+cmd call next
+waitlog call watch 5: (over|stopped) 40
+cmd gotoitem
+wait 2
+cmd look nearest
+wait 1.5
+cmd look
+cmd clean check onfoot-look
+capture 64-onfoot-look
+cmd look free
+# J: the pause menu shows as usual (the clean frame steps aside), and the clean frame holds again once it closes.
+cmd vrpress menu
+wait 2
+cmd clean
+cmd clean check menu
+capture 64-menu
+cmd menu close
+wait 2
+cmd clean check after-menu
+# K: the game's own HUD toggle while it holds; then off with the game's HUD still hidden (its choice stays), on again.
+cmd call hud off
+wait 1
+cmd clean check hudtoggle
+cmd clean off
+wait 1
+cmd clean check off-hudhidden
+capture 64-off-hudhidden
+cmd call hud on
+wait 1
+cmd clean on
+wait 1
+# L: back in the HOVA (boarding is black too).
+cmd clean watch 30 boarding
+cmd board
+wait 2
+cmd press Action1 0.2
+waitlog Boarding: 20
+wait 3
+cmd clean check after-boarding
+capture 64-boarded-clean
+mirror 64-boarded-clean
+waitlog clean watch 4 \(boarding\): (over|stopped) 35
+cmd spectator off
+# M: off as the key does (everything back at once), then on and off again.
+cmd clean key
+waitlog Clean frame off \(key\) 5
+wait 1
+cmd clean check off
+cmd hud expect Radar 5
+cmd wrist
+capture 64-off
+mirror 64-off
+cmd clean key
+waitlog \[Filming\] read again 5
+wait 1
+cmd clean check on-again
+cmd clean key
+waitlog Clean frame off \(key\): 5
+wait 1
+cmd clean check off-again
+cmd hud radar off
+cmd wrist auto
+cmd status
+# The checks.
+waitlog clean check before: .* -> clean check ok \(all back\) 5
+waitlog clean check rest-on: .* -> clean check ok 5
+waitlog clean check flight: .* -> clean check ok 5
+waitlog clean check call-ringing-kept: .*a call ringing.* -> clean check ok 5
+waitlog clean check call-kept: .*a line up.* -> clean check ok 5
+waitlog clean check call-hidden: .*a line up.* -> clean check ok 5
+waitlog clean check dash-hidden: .*a line up.* -> clean check ok 5
+waitlog clean check dash-kept: .*a line up.* -> clean check ok 5
+waitlog clean check after-passage: .* -> clean check ok 5
+waitlog clean check parked: .* -> clean check ok 5
+waitlog clean check onfoot: .* -> clean check ok 5
+waitlog clean check onfoot-call: .*a line up.* -> clean check ok 5
+waitlog clean check onfoot-look: .* -> clean check ok 5
+waitlog clean check menu: .*stepping aside \(the game's menu\).* -> clean check ok 5
+waitlog clean check after-menu: .* -> clean check ok 5
+waitlog clean check hudtoggle: .* -> clean check ok 5
+waitlog clean check off-hudhidden: .* -> clean check ok \(all back\) 5
+waitlog clean check after-boarding: .* -> clean check ok 5
+waitlog clean check off: .* -> clean check ok \(all back\) 5
+waitlog clean check on-again: .* -> clean check ok 5
+waitlog clean check off-again: .* -> clean check ok \(all back\) 5
+waitlog clean watch 1 \(flight\): over .* -> clean watch ok 5
+waitlog clean watch 2 \(passage\): over .* -> clean watch ok 5
+waitlog clean watch 3 \(getting-out\): over .* -> clean watch ok 5
+waitlog clean watch 4 \(boarding\): over .* -> clean watch ok 5
+waitlog call watch 1: over .* -> call watch ok 5
+waitlog call watch 2: over .*the clean frame hid the line in [1-9][0-9]* frames, a box in view anyway in 0; the game's dialogue closed.* -> call watch ok 5
+waitlog call watch 3: over .*the clean frame hid the line in [1-9][0-9]* frames, a box in view anyway in 0; the game's dialogue closed.* -> call watch ok 5
+waitlog call watch 4: over .* -> call watch ok 5
+waitlog call watch 5: over .* -> call watch ok 5
+waitlog hud check: Radar piece in view 5

@@ -1,0 +1,48 @@
+# Rain = World on foot: the game's streaks left out, a copy of the cockpit's raindrops around the head. Captures
+# ahead, a quarter turn and a half turn away (snap turns), then the game's streaks (Overlay) and no rain (Off).
+waitlog Scenes: Main 120
+wait 12
+cmd title
+wait 6
+cmd continue
+waitlog Cockpit view on 220
+wait 4
+cmd rain
+cmd park
+wait 2
+cmd press Action1 0.2
+wait 3
+cmd press Action1 0.2
+wait 3
+cmd press Action1 0.2
+wait 12
+cmd status
+cmd rain
+cmd rainprobe
+capture 29-ahead
+mirror 29-ahead
+cmd vrstick 0 0 1 0 0.3
+wait 1
+cmd vrstick 0 0 1 0 0.3
+wait 1
+cmd vrstick 0 0 1 0 0.3
+wait 3
+capture 29-quarter
+cmd vrstick 0 0 1 0 0.3
+wait 1
+cmd vrstick 0 0 1 0 0.3
+wait 1
+cmd vrstick 0 0 1 0 0.3
+wait 3
+capture 29-half
+cmd rain overlay
+wait 2
+capture 29-overlay
+cmd rain off
+wait 2
+cmd rain
+capture 29-off
+cmd rain world
+wait 3
+cmd rain
+cmd status

@@ -1,0 +1,25 @@
+# Probe, not a pass/fail test: what the wrist, the hands and the HUD read (`uimap`): the HUD's parts on screen,
+# the dialogue, the job and its marker, the closest thing to interact with, in the cockpit and on foot (walking ahead).
+waitlog Scenes: Main 120
+wait 12
+cmd title
+wait 6
+cmd continue
+waitlog Cockpit view on 220
+wait 4
+cmd uimap
+capture 30-cockpit
+cmd park
+wait 2
+cmd press Action1 0.2
+wait 3
+cmd press Action1 0.2
+wait 3
+cmd press Action1 0.2
+wait 12
+cmd uimap
+capture 30-onfoot
+cmd vrstick 0 0.9 0 0 1.5
+wait 3
+cmd uimap
+capture 30-near

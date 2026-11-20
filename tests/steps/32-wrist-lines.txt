@@ -1,0 +1,63 @@
+# A game line (Camus's low-fuel warning, from the game's own story trigger) reaching the wrist in the cockpit, then
+# the wrist held up (`wrist show`) while the HOVA flies and turns, then on foot: the wrist with the minimap and a jog.
+#
+# Check: every "wrist parts check ok" (each part flat on the card, inside its edges, drawn by the overlay camera
+# alone). In the cockpit the minimap is off. The flight trace ends with "every part stayed on the card".
+# Captures: 32-wrist-fly, -turn, -turn-back show the district, the job and Camus's lines inside the card, in both
+# eyes, same as at rest.
+waitlog Scenes: Main 120
+wait 12
+cmd title
+wait 6
+cmd continue
+waitlog Cockpit view on 220
+wait 6
+capture 32-cockpit-hud
+cmd fuel20
+wait 4
+cmd wrist
+capture 32-cockpit-line
+wait 5
+cmd wrist
+cmd wrist show
+wait 2
+capture 32-cockpit-wrist
+cmd wrist parts
+cmd wrist trace 11
+cmd press RightTrigger 9
+wait 2
+capture 32-wrist-fly
+mirror 32-wrist-fly
+cmd stick 1 0 0 0 2.5
+wait 1
+capture 32-wrist-turn
+mirror 32-wrist-turn
+wait 1.5
+cmd stick -1 0 0 0 2.5
+wait 1
+capture 32-wrist-turn-back
+wait 1.5
+cmd wrist parts
+waitlog wrist trace over 10
+cmd wrist auto
+cmd park
+wait 2
+cmd press Action1 0.2
+wait 3
+cmd press Action1 0.2
+wait 3
+cmd press Action1 0.2
+wait 12
+cmd wrist show
+wait 2
+capture 32-onfoot-wrist
+cmd wrist parts
+cmd wrist
+cmd wrist auto
+cmd vrstick 0 0.9 0 0 3
+wait 0.5
+cmd vrpress switchview
+wait 1
+cmd onfoot
+wait 3
+cmd onfoot

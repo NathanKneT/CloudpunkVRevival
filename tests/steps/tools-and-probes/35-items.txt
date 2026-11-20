@@ -1,0 +1,21 @@
+# Probe, not a pass/fail test: which items the loaded district holds, active or not, and what the game's
+# Interactable layer has nearby.
+waitlog Scenes: Main 120
+wait 12
+cmd title
+wait 6
+cmd continue
+waitlog Cockpit view on 220
+wait 4
+cmd park
+wait 2
+cmd press Action1 0.2
+wait 3
+cmd press Action1 0.2
+wait 3
+cmd press Action1 0.2
+wait 12
+cmd itemprobe
+cmd vrstick 0 0.9 0 0 1.5
+wait 3
+cmd itemprobe

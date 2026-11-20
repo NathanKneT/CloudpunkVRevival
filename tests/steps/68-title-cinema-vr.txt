@@ -1,0 +1,53 @@
+# The clean main menu in VR: F2 on the main menu takes the menu panel, its list, the laser and the card out of the
+# headset, keeps the scene and the sign, and holds the menu's input; F2 again brings it all back, working.
+# (The free camera is flat only, its part of the title shot is tools-and-probes/68-title-cinema.txt.)
+#
+# Check: the `clean check` waitlogs below ("-> clean check ok", "(all back)" when shown), "-> clean watch ok" while
+# Cross and the laser's trigger are pressed with the menu hidden (nothing loads), the sign relights with the menu
+# hidden ("Menu sign: relight 2 done"), and "Main menu: gone" after the last Cross (CONTINUE worked).
+# Captures (both eyes): 68vr-menu the panel in front of the sign; 68vr-hidden and 68vr-relit-hidden the sign, the
+# clouds and the cab with no panel, laser or card; 68vr-back the panel back; 68vr-ingame the game.
+waitlog Scenes: Main 120
+waitlog Menu sign: VREVIVAL built 120
+wait 8
+cmd title
+waitlog Main menu: up 60
+waitlog Menu sign: relight 1 done 60
+wait 4
+capture 68vr-menu
+cmd clean check vr-menu
+waitlog clean check vr-menu: on the main menu, the clean frame off, the menu shown;.*-> clean check ok \(all back\)\s*$ 10
+
+cmd clean key
+waitlog Clean frame hides the main menu: 10
+wait 1
+cmd clean check vr-hidden
+waitlog clean check vr-hidden: on the main menu, the clean frame on, the menu hidden;.*-> clean check ok\s*$ 10
+capture 68vr-hidden
+mirror 68vr-hidden
+
+# Cross and the laser's trigger do nothing while it is hidden
+cmd clean watch 8 vr-hidden
+cmd press Action1 0.2
+wait 2
+cmd vrpress clickright
+wait 3
+cmd clean check vr-after-press
+waitlog clean check vr-after-press: on the main menu, the clean frame on, the menu hidden;.*-> clean check ok\s*$ 10
+waitlog clean watch 1 \(vr-hidden\): over .*-> clean watch ok\s*$ 15
+
+cmd sign relight
+waitlog Menu sign: relight 2 done 15
+capture 68vr-relit-hidden
+
+cmd clean key
+waitlog Clean frame: the main menu back 10
+wait 2
+cmd clean check vr-back
+waitlog clean check vr-back: on the main menu, the clean frame off, the menu shown;.*-> clean check ok \(all back\)\s*$ 10
+capture 68vr-back
+cmd press Action1 0.2
+waitlog Main menu: gone 60
+wait 40
+cmd status
+capture 68vr-ingame

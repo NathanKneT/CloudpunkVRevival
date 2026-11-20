@@ -1,0 +1,40 @@
+# Hands in Rania's colors (fingerless gloves, bare forearms with her blue implant lights) in the menu, the
+# cockpit, on foot and in front of the pause menu. TrafficDensity 0.5 is set before the save loads: the cockpit
+# view must still come (the mod keeps asking for up to three minutes).
+waitlog Scenes: Main 120
+wait 12
+cmd title
+wait 6
+cmd hands demo 0.3
+wait 4
+capture 18-hands-menu
+cmd traffic 0.5
+cmd continue
+waitlog Cockpit view on 220
+wait 3
+cmd hands demo 0.6
+wait 2
+capture 18-hands-cockpit
+mirror 18-hands-cockpit
+cmd hands demo 0.05
+wait 2
+capture 18-hands-cockpit-open
+cmd traffic
+cmd park
+wait 2
+cmd press Action1 0.2
+wait 3
+cmd press Action1 0.2
+wait 3
+cmd press Action1 0.2
+wait 12
+cmd status
+cmd hands demo 0.35
+wait 2
+capture 18-hands-onfoot
+mirror 18-hands-onfoot
+cmd traffic
+cmd vrpress menu
+wait 3
+capture 18-hands-pause
+cmd status

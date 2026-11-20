@@ -1,0 +1,199 @@
+# Throwing Rania's coffee around the cabin, and the refill, no controllers needed (dev command `coffee`).
+# A throw to the right, picked up where it lies, far throws, one out of the cabin, one straight up, flung at each
+# window, the windscreen and its top, onto the lever and the wheel, a long push on a cup lying on the floor, then out
+# of the HOVA and back in for a fresh cup. Last, the cup runs dry while a test line types out on the wrist.
+#
+# Check:
+#  - getting in, the coffee's place line ends with "cabin for a thrown cup:" listing each pane, none "LEFT OUT", and
+#    no "the cabin's shape is not used" warning. `coffee cabin` gives the solid spans at a few points.
+#  - each throw: "first knock", then "Coffee: at rest after ... bounce(s)" with "cm clear of the wheel" and "cm clear
+#    of the lever" (never "INSIDE"). A cup out of reach: "out of reach: back to the holder", "it fades back to the
+#    holder", then "back in the holder (faded back)". Straight up: "it landed in the holder".
+#  - the glass: "bounced off the left window ('Windshield_Side')", the same for the right one and the windscreen
+#    ('Windshield_Front'), its top included; then "bounced off the lever" and "bounced off the wheel".
+#  - no "went through" and no "never came to rest" anywhere; "it left the cabin" only after `coffee out`.
+#  - the push: 0.45 g for 4 s doesn't move it ("shaken loose 0 time(s)"), 0.7 g for 3 s does once ("Coffee: shaken
+#    loose where it lay").
+#  - the refill: "Coffee: a full, hot cup (a new flight after N s on foot), the last one was empty; the wrist says so".
+#  - the end: "Coffee: the level set to 0.0 cm while a line types out", then "Wrist display: a line typing out (TEST)
+#    grew past a note after it", the note stays last.
+# Captures: 49-coffee-landed shows the cup where it lies, 49-coffee-glass-* the cup back inside by the glass it hit
+# (never out over the city), 49-coffee-fresh a full steaming cup, 49-wrist-empty the whole test line then the note.
+waitlog Scenes: Main 120
+wait 12
+cmd title
+wait 6
+cmd continue
+waitlog Cockpit view on 220
+waitlog Coffee: (holder on|no cup) 30
+wait 2
+cmd coffee cabin
+cmd coffee cabin 0.7 -0.4 0
+cmd coffee cabin 0.77 -0.65 -0.13
+cmd coffee cabin 0 -0.6 0.5
+cmd coffee
+cmd headlook 45 60
+wait 1
+capture 49-coffee-before
+# A throw to the right, onto the console or the passenger's seat.
+cmd coffee throw right 1.2
+wait 1.9
+capture 49-coffee-flying
+wait 2.2
+cmd coffee stop
+wait 0.3
+capture 49-coffee-landed
+mirror 49-coffee-landed
+cmd coffee
+# Taken again where it lies, back in the holder.
+cmd coffee grab
+wait 1.2
+cmd coffee
+cmd coffee drop
+wait 2
+cmd coffee
+# Far throws: out of reach, it fades back after 3 s.
+cmd coffee throw ahead 3
+wait 4
+capture 49-coffee-far
+cmd coffee
+wait 4.5
+cmd coffee
+cmd coffee stop
+cmd coffee toss 1.6 1 0.2
+wait 3
+capture 49-coffee-far2
+cmd coffee
+wait 4.5
+cmd coffee
+# Out of the cabin: gone at once, back in the holder 2 s later.
+cmd coffee toss 0.3 0.8 0.2
+wait 2.5
+cmd coffee
+cmd coffee out
+wait 0.2
+cmd coffee
+wait 2.5
+cmd coffee
+# Straight up out of the holder: it lands back in it.
+cmd coffee toss 0 0.8 0
+wait 1.5
+cmd coffee
+# The glass: the side windows at shoulder height, the windscreen hard over the dashboard.
+cmd headlook 10 -75
+cmd coffee fling left 3.5
+wait 0.3
+capture 49-coffee-glass-left
+wait 2.2
+cmd coffee
+cmd headlook 10 70
+cmd coffee fling right 3.5
+wait 0.35
+capture 49-coffee-glass-right
+wait 2.2
+cmd coffee
+wait 4.5
+cmd headlook 10 0
+cmd coffee fling ahead 5
+wait 0.25
+capture 49-coffee-glass-ahead
+wait 2.3
+cmd coffee
+wait 4.5
+# The windscreen's top (its lid): straight up and ahead, over the wheel.
+cmd coffee cabin 0.2 0.35 0.48
+cmd headlook -30 15
+cmd coffee fling 0.2 0.05 0.45 0 4.5 0.4
+wait 0.2
+capture 49-coffee-glass-top
+wait 2.3
+cmd coffee
+wait 4.5
+# The lever and the wheel: the cup bounces off and never rests inside either.
+cmd headlook 45 43
+cmd coffee fling lever
+wait 2.5
+capture 49-coffee-lever
+cmd coffee
+wait 4.5
+cmd headlook 30 0
+cmd coffee fling wheel 3
+wait 2.5
+capture 49-coffee-wheel
+cmd coffee
+wait 4.5
+cmd headlook
+# A long push on a cup lying within reach (by the driver's left): under friction, then past it.
+cmd coffee fling -0.2 -0.4 0.08 0 -0.3 0
+wait 2
+cmd coffee
+cmd coffee slosh 0.45 side 4
+wait 4.5
+cmd coffee
+cmd coffee slosh 0.7 side 3
+wait 3.5
+cmd coffee
+# Out of reach on the passenger's side, pushed the whole time: it still fades back.
+cmd coffee fling right 3.5
+cmd coffee slosh 0.7 ahead 5
+wait 6
+cmd coffee
+wait 1
+cmd coffee
+cmd perf measure coffee 4
+cmd coffee throw left 1.5
+wait 5
+cmd coffee
+cmd coffee grab
+wait 1.2
+cmd coffee drop
+wait 2
+cmd coffee stop
+# Empty it before getting out: the wrist says when the next one comes.
+cmd coffee level 0
+wait 0.5
+cmd coffee
+cmd wrist
+# Out of the HOVA and back in: a full, hot cup, and the wrist says so.
+cmd park
+wait 2
+cmd menu close
+cmd press Action1 0.2
+wait 3
+cmd press Action1 0.2
+wait 3
+cmd press Action1 0.2
+wait 3
+cmd status
+waitlog View: Cockpit -> OnFoot 10
+wait 9
+cmd board
+wait 2
+cmd press Action1 0.2
+waitlog Coffee: a full, hot cup \(a new flight 20
+wait 3
+cmd coffee
+cmd wrist show
+wait 1
+capture 49-wrist-fresh
+cmd wrist
+cmd wrist auto
+cmd headlook 45 60
+wait 1.5
+capture 49-coffee-fresh
+mirror 49-coffee-fresh
+cmd coffee
+cmd headlook
+cmd status
+# Last, so a timeout here leaves the rest checked: the cup runs dry while a wrist line types out past the note.
+cmd coffee hint
+cmd wrist type TEST A line typing out on the wrist while the cup runs dry, one letter at a time, the way the game types its lines.
+cmd coffee level 0 typing
+waitlog Coffee: the level set to 0.0 cm while a line types out 15
+waitlog Wrist display: a line typing out 15
+wait 1
+cmd wrist
+cmd wrist show
+wait 1
+capture 49-wrist-empty
+cmd wrist auto

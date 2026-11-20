@@ -1,0 +1,16 @@
+# Started by Steam while SteamVR runs, like a player would: Steam's Desktop Game Theatre must not take the game,
+# then the city, cockpit and lens effects in VR.
+#   tools\test\Run-VRTest.ps1 -Steps tests\steps\23-steam-launch.txt -ViaSteam
+waitlog Scenes: Main 150
+wait 10
+capture 23-steam-title
+mirror 23-steam-title
+cmd status
+cmd title
+wait 6
+cmd continue
+waitlog Cockpit view on 220
+wait 5
+capture 23-steam-cockpit
+cmd probe
+cmd status

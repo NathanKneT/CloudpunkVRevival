@@ -1,0 +1,6 @@
+# StartInVR = Auto with SteamVR closed: the game must start flat and say why on the monitor.
+#   tools\test\Run-VRTest.ps1 -Steps tests\steps\14-flat-auto.txt -NoHeadset -StartInVR Auto
+waitlog Scenes: Main 120
+wait 8
+mirror 14-flat-auto-notice
+wait 2

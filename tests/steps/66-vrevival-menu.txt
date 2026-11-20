@@ -1,0 +1,130 @@
+# The VREVIVAL settings menu, driven like a player: the laser on the entry and on a value's half (`vrsettings point`),
+# the d-pad (`press DPadDown|DPadLeft`, the game's own row input), the stick (`vrstick`), Circle (`vrpress back`) and
+# the pause button (`vrpress menu`). `vrsettings set` first puts the values the run starts from.
+#
+# 1. Main menu: the waitlog stops the run unless VREVIVAL sits between the game's OPTIONS and CONTROLS, and
+#    `vrsettings check title` ends in "-> vrsettings check ok". 66-title-entry: same font, size and spacing as the rest.
+# 2. Opened by the laser. 66-title-window: titled VREVIVAL, amber headers, rows like the game's OPTIONS, WHEEL
+#    SENSITIVITY selected with its note under the list, "rows 15 of 15 in the picture". MENU SIGN off then on with
+#    the laser ("Menu sign: off", "Menu sign: on again"), then Circle closes it.
+# 3. In the cockpit, from the pause menu (66-pause-entry: RESUME, OPTIONS, VREVIVAL, CONTROLS, QUIT).
+# 4. Stick right on WHEEL SENSITIVITY: "QUICK (35) -> RELAXED (50)", saved, and `wheel lock` says 50.
+# 5. D-pad down twice skips the headers to COMFORT VIGNETTE, d-pad left: NORMAL -> LIGHT.
+# 6. The laser on HUD DISTANCE's right half: 2.0 M -> 2.5 M. 66-window-changed shows all three changes.
+# 7. Circle, then the game's own OPTIONS by the laser: its own window as before, a row stepped on and back.
+# 8. VREVIVAL again, then the pause button closes both ("closed with the game's menu").
+# 9. `vrsettings check after`: the HUD now 2.5 m away (66-hud-after). 10. RESUME still closes the pause menu.
+# No "VRevival menu:" warning, no "NOT SAVED", no "NOT IN THE FILE", no "check FAILED".
+waitlog Scenes: Main 120
+wait 12
+cmd title
+wait 6
+cmd vrsettings set wheel 35
+cmd vrsettings set vignette normal
+cmd vrsettings set hud-distance 2
+cmd vrsettings set menu-sign on
+waitlog added under the game's OPTIONS .*between 'Options' and 'Controls' 20
+cmd vrsettings
+cmd vrsettings check title
+waitlog vrsettings check title: .*-> vrsettings check ok 10
+cmd focus
+capture 66-title-entry
+mirror 66-title-entry
+cmd vrsettings point entry
+waitlog VRevival menu: opened 10
+wait 2
+cmd vrsettings
+cmd vrsettings check title-window
+waitlog vrsettings check title-window: .*rows 15 of 15 in the picture.*-> vrsettings check ok 10
+capture 66-title-window
+mirror 66-title-window
+cmd vrsettings point menu-sign left
+waitlog Menu sign: off 10
+wait 2
+cmd vrsettings point menu-sign right
+waitlog Menu sign: on again 10
+wait 3
+cmd vrpress back
+waitlog VRevival menu: closed 10
+wait 2
+cmd vrsettings
+cmd continue
+waitlog Cockpit view on 220
+wait 4
+cmd wheel lock
+cmd vrpress menu
+wait 3
+cmd menu
+cmd vrsettings
+capture 66-pause-entry
+mirror 66-pause-entry
+cmd vrsettings point entry
+waitlog opened \(the VREVIVAL entry, #2\) 10
+wait 2
+cmd vrsettings
+cmd focus
+cmd status
+capture 66-window
+mirror 66-window
+cmd vrstick 0.9 0 0 0 0.3
+waitlog WHEEL SENSITIVITY QUICK \(35\) -> RELAXED \(50\) 5
+wait 1
+cmd wheel lock
+cmd press DPadDown 0.12
+wait 0.8
+cmd press DPadDown 0.12
+wait 0.8
+cmd vrsettings
+cmd press DPadLeft 0.12
+wait 1
+cmd vrsettings point hud-distance right
+wait 1.5
+cmd vrsettings
+cmd focus
+capture 66-window-changed
+mirror 66-window-changed
+cmd vrsettings check open
+waitlog vrsettings check open: .*rows 15 of 15 in the picture.*-> vrsettings check ok 10
+cmd vrpress back
+wait 3
+cmd menu
+cmd vrsettings
+capture 66-back-on-pause
+cmd vrsettings point options
+wait 3
+cmd focus
+cmd vrsettings
+capture 66-game-options
+mirror 66-game-options
+cmd vrsettings point selected right
+waitlog Option 'Quality': 10
+wait 3
+cmd vrsettings point selected left
+wait 3
+cmd focus
+cmd vrpress back
+wait 3
+cmd focus
+cmd menu
+cmd vrsettings point entry
+waitlog opened \(the VREVIVAL entry, #3\) 10
+wait 2
+cmd vrpress menu
+waitlog closed with the game's menu 10
+wait 2
+cmd status
+cmd menu
+cmd vrsettings
+wait 3
+cmd vrsettings check after
+cmd wheel lock
+cmd hud
+capture 66-hud-after
+mirror 66-hud-after
+cmd vrpress menu
+wait 3
+cmd menu
+cmd vrsettings point resume
+wait 3
+cmd status
+cmd menu

@@ -1,0 +1,19 @@
+# Title menu in front of the eyes, below the neon sign; the options menu opened with the laser's test hook and an
+# option row changed with the stick (+1 then -1, so the player's setting ends as it was).
+waitlog Scenes: Main 120
+wait 12
+cmd title
+wait 6
+cmd focus
+capture 20-title-focus
+cmd uipoint 110 117 click
+wait 4
+cmd focus
+capture 20-options-focus
+mirror 20-options-focus
+cmd vrstick 0.9 0 0 0 0.3
+wait 1
+cmd vrstick -0.9 0 0 0 0.3
+wait 1
+cmd focus
+cmd status

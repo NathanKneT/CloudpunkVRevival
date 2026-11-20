@@ -1,0 +1,152 @@
+# The lift lever in Rania's hand, no controllers needed (dev command `lever`).
+# The stick climbs first, so the game's own lever shows how it leans. The head is turned down and right (headlook) so
+# the captures show the lever. Then a test hand grabs the handle, pushes it to the front stop (dives), pulls it to
+# the back stop (climbs), to the neutral middle, two fifths back (a slower climb), past a stop and back, and lets go
+# (it springs back to the middle). Then one tracking fault at a time: a jump, a freeze, a slip 20 cm off the handle,
+# then 50 cm away (it lets go). Then reaching for the wheel with the lever held, a hand on each, a grab while the stick
+# climbs, a recenter and a menu while holding.
+#
+# Check: "Lever grabbed" on each grab, and each `cmd lever` line checks "push ok", "game lever ok" and "climb ok"
+# (a failure is also a warning). After the recenter: "still holds the handle after the cockpit moved".
+waitlog Scenes: Main 120
+wait 12
+cmd title
+wait 6
+cmd continue
+waitlog Cockpit view on 220
+wait 4
+cmd charm tree
+cmd lever
+capture 47-lever-ahead
+cmd headlook 42 32
+wait 1
+cmd lever
+capture 47-lever-rest
+mirror 47-lever-rest
+cmd vrstick 0 0 0 1 2
+wait 1
+cmd lever
+capture 47-lever-stick-climb
+wait 2
+cmd lever
+cmd lever grab
+wait 1
+cmd lever
+capture 47-lever-grab
+mirror 47-lever-grab
+cmd lever push 1
+wait 2
+cmd lever
+wait 1.5
+cmd lever
+capture 47-lever-forward-dive
+mirror 47-lever-forward-dive
+cmd lever push -1
+wait 2
+cmd lever
+wait 2
+cmd lever
+capture 47-lever-back-climb
+mirror 47-lever-back-climb
+cmd lever push -0.1
+wait 1.5
+cmd lever
+capture 47-lever-middle
+cmd lever push -0.4
+wait 2.5
+cmd lever
+cmd lever push -1.6
+wait 1.5
+cmd lever
+capture 47-lever-past-stop
+cmd lever push -0.5
+wait 1
+cmd lever
+cmd lever release
+wait 1.5
+cmd lever
+capture 47-lever-sprung-back
+cmd lever grab
+wait 1
+cmd lever push -0.8
+wait 1.5
+cmd lever jump
+wait 1
+cmd lever
+cmd lever freeze
+wait 1.5
+cmd lever
+capture 47-lever-frozen
+cmd lever thaw
+wait 1
+cmd lever push -0.6
+wait 1
+cmd lever
+cmd lever slip
+wait 1.5
+cmd lever
+cmd lever push -0.3
+wait 1.5
+cmd lever
+capture 47-lever-slipped
+cmd lever away
+wait 1.5
+cmd lever
+cmd lever release
+cmd lever thaw
+wait 1.5
+cmd lever grab
+wait 1
+cmd lever reach
+wait 1.5
+cmd lever
+cmd wheel
+capture 47-lever-reached-wheel
+cmd lever release
+cmd lever thaw
+wait 1.5
+cmd wheel grab left
+cmd lever grab right -2.5
+wait 1
+cmd lever push 0.5
+wait 1
+cmd wheel grab right
+wait 1
+cmd wheel
+cmd lever
+capture 47-lever-wheel-and-lever
+mirror 47-lever-wheel-and-lever
+cmd wheel release
+cmd lever release
+wait 1.5
+cmd wheel stop
+cmd vrstick 0 0 0 0.7 4
+wait 1
+cmd lever
+cmd lever grab
+wait 1
+cmd lever
+wait 1.5
+cmd lever release
+wait 2
+cmd lever grab
+wait 1
+cmd lever push -0.5
+wait 1.5
+cmd headlook
+cmd recenter
+wait 1
+cmd lever
+cmd headlook 42 32
+wait 0.5
+capture 47-lever-after-recenter
+cmd vrpress menu
+wait 2
+cmd lever
+cmd vrpress menu
+wait 2
+cmd lever stop
+wait 1
+cmd lever
+cmd headlook
+cmd status

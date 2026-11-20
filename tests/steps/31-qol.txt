@@ -1,0 +1,46 @@
+# The VR additions: menu card on the title, HUD on the windscreen and the wrist in the cockpit, then on foot the
+# wrist with the game's minimap and the HUD without it, a jog, then reaching out (onfoot reach).
+waitlog Scenes: Main 120
+wait 12
+capture 31-title
+cmd title
+wait 6
+cmd continue
+waitlog Cockpit view on 220
+wait 6
+capture 31-cockpit-hud
+cmd wrist show
+wait 2
+capture 31-cockpit-wrist
+cmd wrist
+cmd wrist auto
+cmd park
+wait 2
+cmd press Action1 0.2
+wait 3
+cmd press Action1 0.2
+wait 3
+cmd press Action1 0.2
+wait 12
+capture 31-onfoot-hud
+cmd wrist show
+wait 2
+capture 31-onfoot-wrist
+cmd wrist
+cmd wrist auto
+cmd vrstick 0 0.9 0 0 2.5
+wait 0.5
+cmd vrpress switchview
+wait 0.5
+cmd onfoot
+wait 2.5
+cmd onfoot
+cmd onfoot reach
+wait 3
+cmd status
+capture 31-reach
+cmd press Action2 0.2
+wait 2
+cmd press Action2 0.2
+wait 2
+cmd status

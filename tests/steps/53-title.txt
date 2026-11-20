@@ -1,0 +1,29 @@
+# SkipTitleScreen (on by default): in VR the game's "press any key to continue" passes by itself and the main menu
+# comes up alone, on black until then.
+#
+# Check, in this order:
+#  - "View: no game camera draws the eyes at" (the game switched its camera off)
+#  - "Title screen: the game waits on its \"press any key\"" then "one press of Square passes it"
+#  - "View: a game camera draws the eyes again", "View: main menu in view at"
+#  - "Title screen: skipped at"
+#  - no "View cut" line while the menu is up
+#  - then `title` says "nothing pressed", the menu stays up and Continue still starts the game
+# Captures: 53-menu is the menu alone on its card over the city and the neon sign, no minimap, no prompt, nothing
+# smeared.
+waitlog Scenes: Main 120
+waitlog Title screen: skipped 30
+cmd status
+cmd hud
+cmd focus
+capture 53-menu
+mirror 53-menu
+cmd title
+wait 3
+cmd status
+cmd hud
+capture 53-menu-later
+cmd continue
+waitlog Cockpit view on 220
+wait 4
+cmd status
+capture 53-cockpit

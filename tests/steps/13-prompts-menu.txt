@@ -1,0 +1,20 @@
+# Prompts on the UI panel: Options screen (CHANGE / BACK) in PlayStation, then Xbox style.
+# A small stick nudge before each snapshot keeps the game in gamepad mode (real mouse movement switches it).
+waitlog Scenes: Main 120
+wait 12
+cmd prompts playstation
+cmd title
+wait 6
+cmd uipoint 110 118 click
+wait 4
+cmd stick 0 -0.7 0 0 0.15
+wait 3
+cmd prompts
+cmd uisnap options-ps
+capture 13-options-ps
+cmd prompts xbox
+cmd stick 0 0.7 0 0 0.15
+wait 3
+cmd prompts
+cmd uisnap options-xbox
+cmd status

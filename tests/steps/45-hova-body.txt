@@ -1,0 +1,126 @@
+# The HOVA's body and windows while it banks (dev command `hova`): the horizon stays level, the outside body is left
+# out, and the glass, wipers and drops stay pinned to the window frames.
+# Full throttle with the stick shaken left and right, a capture every 0.2 s through each swing: pinned (the fix), moved
+# with the body (the old way, which slid), as the game leaves them (`hova show`), then pinned with hands on the wheel.
+#
+# Check: each bank is logged ("turned up to ... (bank N"), or the run stops there. `hova trace` logs how far the front
+# glass moves in the view.
+waitlog Scenes: Main 120
+wait 12
+cmd title
+wait 6
+cmd continue
+waitlog Cockpit view on 220
+waitlog the seat taken 30
+wait 2
+cmd hova near
+cmd hova trace 120
+capture 45-rest
+cmd press RightTrigger 90
+wait 2
+cmd stick 1 0 0 0 1
+wait 1
+cmd stick -1 0 0 0 1
+wait 1
+cmd stick 1 0 0 0 1.5
+wait 0.3
+capture 45-pin-a1
+wait 0.2
+capture 45-pin-a2
+wait 0.2
+capture 45-pin-a3
+wait 0.2
+capture 45-pin-a4
+cmd stick -1 0 0 0 1.5
+wait 0.3
+capture 45-pin-b1
+wait 0.2
+capture 45-pin-b2
+wait 0.2
+capture 45-pin-b3
+wait 0.2
+capture 45-pin-b4
+waitlog turned up to .* deg against the cockpit \(bank 1: 10
+cmd hova
+cmd hova glass car
+cmd stick 1 0 0 0 1.5
+wait 0.3
+capture 45-car-a1
+wait 0.2
+capture 45-car-a2
+wait 0.2
+capture 45-car-a3
+wait 0.2
+capture 45-car-a4
+cmd stick -1 0 0 0 1.5
+wait 0.3
+capture 45-car-b1
+wait 0.2
+capture 45-car-b2
+wait 0.2
+capture 45-car-b3
+wait 0.2
+capture 45-car-b4
+cmd hova glass pin
+cmd hova show
+cmd stick 1 0 0 0 1.5
+wait 0.3
+capture 45-game-a1
+wait 0.2
+capture 45-game-a2
+wait 0.2
+capture 45-game-a3
+wait 0.2
+capture 45-game-a4
+mirror 45-game-a4
+cmd stick -1 0 0 0 1.5
+wait 0.3
+capture 45-game-b1
+wait 0.2
+capture 45-game-b2
+wait 0.2
+capture 45-game-b3
+wait 0.2
+capture 45-game-b4
+cmd hova hide
+wait 1
+cmd hova near
+cmd stick 1 0 0 0 3
+wait 1
+cmd wheel grab both
+wait 0.5
+cmd wheel turn 45
+wait 0.3
+capture 45-wheel-a1
+wait 0.2
+capture 45-wheel-a2
+mirror 45-wheel-a2
+cmd wheel turn -90
+wait 0.3
+capture 45-wheel-b1
+wait 0.2
+capture 45-wheel-b2
+mirror 45-wheel-b2
+cmd wheel turn 90
+wait 0.3
+capture 45-wheel-c1
+wait 0.2
+capture 45-wheel-c2
+cmd wheel
+cmd hova
+cmd wheel release
+wait 3
+cmd hova
+capture 45-straight
+cmd vignette 4
+wait 1.5
+capture 45-vignette
+wait 4
+cmd vrpress switchview
+wait 4
+cmd hova
+capture 45-chase
+cmd vrpress switchview
+wait 5
+cmd hova
+cmd status
