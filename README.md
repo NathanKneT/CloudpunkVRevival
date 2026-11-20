@@ -117,6 +117,20 @@ tools\install.ps1           # copy the build into the game
 
 Game somewhere else? Add `-CloudpunkDir "D:\SteamLibrary\steamapps\common\Cloudpunk"` to `build.ps1` (`install.ps1` finds it, or takes `-GameDir`). `-Dev` builds with the developer commands, don't ship that one. The SteamVR bindings come from `tools/make_bindings.py` and `tools/check_bindings.py` checks them, so don't edit `bindings/*.json` by hand.
 
+## Tests
+
+`tools/test/Run-VRTest.ps1` plays the game on its own through SteamVR's null headset, no headset needed. It follows a step file from `tests/steps`: wait for a log line, send a dev command, grab a headset capture into `tests/captures`. Your mod settings, save and SteamVR config are put back afterwards.
+
+It needs a `-Dev` build and PowerShell 7:
+
+```powershell
+tools\build.ps1 -Dev
+tools\install.ps1
+tools\test\Run-VRTest.ps1 -Steps tests\steps\36-wheel.txt
+```
+
+It takes over the screen and closes the game and SteamVR when it's done, so don't run it while playing. Most scenarios continue your last save in the HOVA; the few that need a set spot take `-SaveFixture <folder>`, bring your own save (a folder of .sav files).
+
 ## Credits
 
 - ION LANDS for Cloudpunk
